@@ -1,0 +1,38 @@
+import { lazy, Suspense } from 'react'
+import { Navigate, Route, Routes } from 'react-router-dom'
+import { Layout } from './components/Layout'
+
+const AnalysisPage = lazy(() => import('./pages/AnalysisPage').then((module) => ({ default: module.AnalysisPage })))
+const DashboardPage = lazy(() => import('./pages/DashboardPage').then((module) => ({ default: module.DashboardPage })))
+const DiagnosticPage = lazy(() => import('./pages/DiagnosticPage').then((module) => ({ default: module.DiagnosticPage })))
+const ExamExercisesPage = lazy(() => import('./pages/ExamExercisesPage').then((module) => ({ default: module.ExamExercisesPage })))
+const MistakesPage = lazy(() => import('./pages/MistakesPage').then((module) => ({ default: module.MistakesPage })))
+const MockExamPage = lazy(() => import('./pages/MockExamPage').then((module) => ({ default: module.MockExamPage })))
+const PracticePage = lazy(() => import('./pages/PracticePage').then((module) => ({ default: module.PracticePage })))
+const SimulatorsPage = lazy(() => import('./pages/SimulatorsPage').then((module) => ({ default: module.SimulatorsPage })))
+const FormulasPage = lazy(() => import('./pages/FormulasPage').then((module) => ({ default: module.FormulasPage })))
+const StudyPlanPage = lazy(() => import('./pages/StudyPlanPage').then((module) => ({ default: module.StudyPlanPage })))
+const StudyPage = lazy(() => import('./pages/StudyPage').then((module) => ({ default: module.StudyPage })))
+
+export default function App() {
+  return (
+    <Layout>
+      <Suspense fallback={<div className="route-loading">A preparar o próximo passo…</div>}>
+        <Routes>
+          <Route path="/" element={<DashboardPage />} />
+          <Route path="/analysis" element={<AnalysisPage />} />
+          <Route path="/diagnostic" element={<DiagnosticPage />} />
+          <Route path="/exam-exercises" element={<ExamExercisesPage />} />
+          <Route path="/study" element={<StudyPage />} />
+          <Route path="/practice" element={<PracticePage />} />
+          <Route path="/simulators" element={<SimulatorsPage />} />
+          <Route path="/formulas" element={<FormulasPage />} />
+          <Route path="/study-plan" element={<StudyPlanPage />} />
+          <Route path="/mock-exam" element={<MockExamPage />} />
+          <Route path="/mistakes" element={<MistakesPage />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Suspense>
+    </Layout>
+  )
+}
