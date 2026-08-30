@@ -2,6 +2,7 @@
 import { createContext, useContext, useEffect, useMemo, useReducer, type ReactNode } from 'react'
 import { families } from '../data/analysis'
 import { diagnosticMastery, updateMastery } from '../domain/mastery/mastery'
+import { DEFAULT_EXAM_DATE, LEGACY_DEFAULT_EXAM_DATE } from '../domain/study/examDate'
 import type { Attempt, Confidence, ErrorType, FamilyId, FamilyProgress, MockResult, ProgressState, Settings } from '../domain/types'
 
 const STORAGE_KEY = 'fsiap-prep-progress-v2'
@@ -17,7 +18,7 @@ export const initialState: ProgressState = {
   settings: {
     passTarget: 10,
     preparationTarget: 13,
-    examDate: '2027-01-20',
+    examDate: DEFAULT_EXAM_DATE,
     dailyMinutes: 30,
   },
 }
@@ -67,10 +68,22 @@ function reducer(state: ProgressState, action: Action): ProgressState {
   return state
 }
 
+export function migrateState(parsed: Partial<ProgressState>): ProgressState {
+  const settings = { ...initialState.settings, ...parsed.settings }
+  if (settings.examDate === LEGACY_DEFAULT_EXAM_DATE) settings.examDate = DEFAULT_EXAM_DATE
+
+  return {
+    ...initialState,
+    ...parsed,
+    settings,
+    mastery: { ...initialState.mastery, ...parsed.mastery },
+  }
+}
+
 function loadState(): ProgressState {
   try {
     const stored = localStorage.getItem(STORAGE_KEY)
-    return stored ? { ...initialState, ...JSON.parse(stored), mastery: { ...initialState.mastery, ...JSON.parse(stored).mastery } } : initialState
+    return stored ? migrateState(JSON.parse(stored) as Partial<ProgressState>) : initialState
   } catch {
     return initialState
   }

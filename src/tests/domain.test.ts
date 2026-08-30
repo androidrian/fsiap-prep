@@ -4,9 +4,10 @@ import { calculateCoverage } from '../domain/analytics/coverage'
 import { compositeThermalConduction, coulombForce, magneticOrbitRadius, malusIntensity, rcChargeVoltage, rcDischargeVoltage, refractionAngle, symmetricElectricField, thermalConduction, twoMeshCurrents, uniformElectricForce, uniformFieldEnergyChange, unpolarizedThroughPolarizers, withinTolerance } from '../domain/exercises/calculators'
 import { exerciseTemplateCount, generateExercise, generateMixedSet } from '../domain/exercises/generator'
 import { currentConfidence, learningState, updateMastery } from '../domain/mastery/mastery'
+import { DEFAULT_EXAM_DATE, daysUntilExam } from '../domain/study/examDate'
 import { recommendNext, studyPriority } from '../domain/study/studyEngine'
 import type { FamilyId, FamilyProgress, ProgressState } from '../domain/types'
-import { initialState } from '../storage/ProgressContext'
+import { initialState, migrateState } from '../storage/ProgressContext'
 
 const progress = (overrides: Partial<FamilyProgress> = {}): FamilyProgress => ({ mastery: 0, updatedAt: null, independentSuccesses: 0, hintedSuccesses: 0, failures: 0, nextReviewAt: null, ...overrides })
 
@@ -92,6 +93,21 @@ describe('parameterized exercise bank', () => {
 })
 
 describe('mastery and scheduling', () => {
+  it('uses the confirmed 2 September 2026 exam date and counts calendar days', () => {
+    expect(DEFAULT_EXAM_DATE).toBe('2026-09-02')
+    expect(daysUntilExam(DEFAULT_EXAM_DATE, new Date('2026-08-30T23:59:59+01:00'))).toBe(3)
+    expect(daysUntilExam(DEFAULT_EXAM_DATE, new Date('2026-09-02T08:00:00+01:00'))).toBe(0)
+  })
+
+  it('migrates the former default exam date without discarding progress', () => {
+    const migrated = migrateState({
+      diagnosed: true,
+      settings: { ...initialState.settings, examDate: '2027-01-20' },
+    })
+    expect(migrated.settings.examDate).toBe(DEFAULT_EXAM_DATE)
+    expect(migrated.diagnosed).toBe(true)
+  })
+
   it('discounts a hinted answer versus an autonomous answer', () => {
     const base = progress({ mastery: 0.35, updatedAt: '2026-08-29T10:00:00Z' })
     const autonomous = updateMastery(base, { correct: true, hintsUsed: 0, confidence: 'high', at: new Date('2026-08-29T10:00:00Z') })

@@ -3,14 +3,10 @@ import { Link } from 'react-router-dom'
 import { families } from '../data/analysis'
 import { calculateCoverage } from '../domain/analytics/coverage'
 import { currentConfidence } from '../domain/mastery/mastery'
+import { daysUntilExam } from '../domain/study/examDate'
 import { rankFamilies, recommendNext } from '../domain/study/studyEngine'
 import { useProgress } from '../storage/ProgressContext'
 import { StatusDot } from '../components/StatusDot'
-
-function daysUntil(date: string) {
-  const target = new Date(`${date}T12:00:00`)
-  return Math.max(0, Math.ceil((target.getTime() - Date.now()) / 86_400_000))
-}
 
 export function DashboardPage() {
   const { state, dispatch } = useProgress()
@@ -24,7 +20,7 @@ export function DashboardPage() {
     <div className="page dashboard-page">
       <section className="page-heading dashboard-heading">
         <div>
-          <p className="eyebrow">Plano adaptativo · {daysUntil(state.settings.examDate)} dias até ao exame</p>
+          <p className="eyebrow">Plano adaptativo · {daysUntilExam(state.settings.examDate)} dias até ao exame</p>
           <h1>O que aumenta mais<br />a tua nota agora?</h1>
         </div>
         <StatusDot status={coverage.status} />

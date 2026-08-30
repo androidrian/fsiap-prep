@@ -1,12 +1,13 @@
 import { ArrowRight, CalendarDays, CheckCircle2, Clock3, Target } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { familyById } from '../data/analysis'
+import { daysUntilExam } from '../domain/study/examDate'
 import { rankFamilies } from '../domain/study/studyEngine'
 import { useProgress } from '../storage/ProgressContext'
 
 export function StudyPlanPage() {
   const { state } = useProgress()
-  const daysLeft = Math.max(1, Math.ceil((new Date(`${state.settings.examDate}T12:00:00`).getTime() - Date.now()) / 86_400_000))
+  const daysLeft = Math.max(1, daysUntilExam(state.settings.examDate))
   const ranked = rankFamilies(state)
   const days = Array.from({ length: Math.min(7, daysLeft) }, (_, index) => {
     const family = familyById[ranked[index % Math.min(5, ranked.length)].id]
