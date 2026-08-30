@@ -420,7 +420,7 @@ h1, h2, h3, p { margin-top: 0; }
 .angle-reference{stroke:#9ca4ae;stroke-width:1;stroke-dasharray:4 4}.theta-arc{fill:none;stroke:var(--amber);stroke-width:2}.theta-label{fill:var(--amber)!important;font-weight:800}
 .magnetic-vector{stroke:var(--amber);stroke-width:4;transition:x2 .2s ease,y2 .2s ease}.magnetic-tip{fill:var(--amber);transition:cx .2s ease,cy .2s ease}.magnetic-caption{fill:var(--amber)!important;font-weight:800}
 .gravity-vector{stroke:var(--red);stroke-width:3}.gravity-tip{fill:var(--red)}.gravity-caption{fill:var(--red)!important;font-weight:800}
-.resultant-vector{stroke:var(--blue);stroke-width:5;transition:x2 .2s ease,y2 .2s ease}
+.resultant-vector{stroke:var(--blue);stroke-width:4;stroke-dasharray:7 4;transition:x2 .2s ease,y2 .2s ease}
 .trajectory-hint{fill:none;stroke:#8795aa;stroke-width:1.5;stroke-dasharray:5 4}
 
 @media (max-width:680px){
