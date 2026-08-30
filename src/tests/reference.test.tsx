@@ -16,10 +16,11 @@ describe('exam references', () => {
   })
 
   it('converts centimetres to metres interactively', () => {
-    render(<MemoryRouter><UnitsPage /></MemoryRouter>)
+    const { container } = render(<MemoryRouter><UnitsPage /></MemoryRouter>)
     fireEvent.change(screen.getByLabelText('Valor a converter'), { target: { value: '250' } })
     expect(screen.getByText('2,5')).toBeInTheDocument()
     expect(screen.getByText('× 10⁻²')).toBeInTheDocument()
+    expect(container.querySelectorAll('.unit-register small .formula').length).toBeGreaterThan(0)
   })
 
   it('provides the original PDF, valid rendered formulas and the source typo warning', () => {

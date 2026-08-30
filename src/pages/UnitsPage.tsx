@@ -66,7 +66,7 @@ export function UnitsPage() {
         {filtered.map((item) => (
           <article key={item.id}>
             <div><small>{categoryNames[item.category]}</small><strong>{item.name}</strong><Formula value={item.symbol} /></div>
-            <div><Formula value={item.si} /><small>{item.equivalent}</small></div>
+            <div><Formula value={item.si} /><small>{item.equivalent.includes('\\') ? <Formula value={item.equivalent} /> : item.equivalent}</small></div>
             <div>{item.common}</div>
             <p><TriangleAlert size={13} />{item.warning}</p>
           </article>
