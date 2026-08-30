@@ -7,7 +7,7 @@ import { currentConfidence, learningState, updateMastery } from '../domain/maste
 import { DEFAULT_EXAM_DATE, daysUntilExam } from '../domain/study/examDate'
 import { recommendNext, studyPriority } from '../domain/study/studyEngine'
 import type { FamilyId, FamilyProgress, ProgressState } from '../domain/types'
-import { initialState, migrateState } from '../storage/ProgressContext'
+import { initialState } from '../storage/ProgressContext'
 
 const progress = (overrides: Partial<FamilyProgress> = {}): FamilyProgress => ({ mastery: 0, updatedAt: null, independentSuccesses: 0, hintedSuccesses: 0, failures: 0, nextReviewAt: null, ...overrides })
 
@@ -97,15 +97,6 @@ describe('mastery and scheduling', () => {
     expect(DEFAULT_EXAM_DATE).toBe('2026-09-02')
     expect(daysUntilExam(DEFAULT_EXAM_DATE, new Date('2026-08-30T23:59:59+01:00'))).toBe(3)
     expect(daysUntilExam(DEFAULT_EXAM_DATE, new Date('2026-09-02T08:00:00+01:00'))).toBe(0)
-  })
-
-  it('migrates the former default exam date without discarding progress', () => {
-    const migrated = migrateState({
-      diagnosed: true,
-      settings: { ...initialState.settings, examDate: '2027-01-20' },
-    })
-    expect(migrated.settings.examDate).toBe(DEFAULT_EXAM_DATE)
-    expect(migrated.diagnosed).toBe(true)
   })
 
   it('discounts a hinted answer versus an autonomous answer', () => {

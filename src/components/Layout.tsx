@@ -1,6 +1,8 @@
-import { Activity, Atom, BookOpenCheck, CalendarRange, ChartNoAxesCombined, Dumbbell, FileCheck2, FlaskConical, Gauge, ListX, Menu, Sigma, TimerReset, X } from 'lucide-react'
+import { Activity, Atom, BookOpenCheck, CalendarRange, ChartNoAxesCombined, Cloud, Dumbbell, FileCheck2, FlaskConical, Gauge, ListX, LogOut, Menu, Sigma, TimerReset, UserRound, X } from 'lucide-react'
 import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
+import { useAuth } from '../auth/AuthContext'
+import { useProgress } from '../storage/ProgressContext'
 
 const links = [
   { to: '/', label: 'Visão geral', icon: Gauge },
@@ -18,6 +20,21 @@ const links = [
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false)
+  const [endingSession, setEndingSession] = useState(false)
+  const { user, logout } = useAuth()
+  const { flush, syncStatus } = useProgress()
+  const syncLabel = { loading: 'A carregar', saving: 'A guardar', saved: 'Sincronizado', error: 'Erro ao guardar' }[syncStatus]
+
+  const endSession = async () => {
+    setEndingSession(true)
+    try {
+      await flush().catch(() => undefined)
+      await logout()
+    } finally {
+      setEndingSession(false)
+    }
+  }
+
   return (
     <div className="app-shell">
       <header className="mobile-header">
@@ -37,10 +54,17 @@ export function Layout({ children }: { children: React.ReactNode }) {
             </NavLink>
           ))}
         </nav>
-        <div className="sidebar-note">
-          <span>Base histórica</span>
-          <strong>30 templates · 26 cenários</strong>
-          <p>Métricas calculadas apenas dos documentos fornecidos.</p>
+        <div className="sidebar-footer">
+          <div className="sidebar-account">
+            <UserRound size={16} />
+            <div><strong>{user?.username}</strong><span className={syncStatus === 'error' ? 'sync-error' : ''}><Cloud size={11} /> {syncLabel}</span></div>
+            <button type="button" aria-label="Terminar sessão" title="Terminar sessão" disabled={endingSession} onClick={() => void endSession()}><LogOut size={16} /></button>
+          </div>
+          <div className="sidebar-note">
+            <span>Base histórica</span>
+            <strong>30 templates · 26 cenários</strong>
+            <p>Métricas calculadas apenas dos documentos fornecidos.</p>
+          </div>
         </div>
       </aside>
       <main className="main-content">{children}</main>

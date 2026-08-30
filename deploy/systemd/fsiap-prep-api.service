@@ -1,0 +1,28 @@
+[Unit]
+Description=FSIAP Prep authentication and progress API
+After=network.target postgresql.service
+
+[Service]
+Type=simple
+User=fsiap-prep
+Group=fsiap-prep
+WorkingDirectory=/var/www/fsiap-prep/current/server
+Environment=NODE_ENV=production
+Environment=PORT=4180
+Environment=COOKIE_PATH=/fsiap-prep/
+Environment=COOKIE_SECURE=true
+Environment=PUBLIC_ORIGIN=https://astrolabs.pt
+Environment=PGHOST=/var/run/postgresql
+Environment=PGDATABASE=fsiap_prep
+Environment=PGUSER=fsiap-prep
+ExecStart=/usr/bin/node --no-warnings index.mjs
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

@@ -1,5 +1,4 @@
 export const DEFAULT_EXAM_DATE = '2026-09-02'
-export const LEGACY_DEFAULT_EXAM_DATE = '2027-01-20'
 
 export function daysUntilExam(examDate: string, now = new Date()) {
   const [year, month, day] = examDate.split('-').map(Number)

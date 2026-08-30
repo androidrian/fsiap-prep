@@ -1,11 +1,11 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useEffect, useMemo, useReducer, type ReactNode } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useRef, useState, type ReactNode } from 'react'
+import { useAuth } from '../auth/AuthContext'
+import { loadProgress, saveProgress } from '../auth/api'
 import { families } from '../data/analysis'
 import { diagnosticMastery, updateMastery } from '../domain/mastery/mastery'
-import { DEFAULT_EXAM_DATE, LEGACY_DEFAULT_EXAM_DATE } from '../domain/study/examDate'
+import { DEFAULT_EXAM_DATE } from '../domain/study/examDate'
 import type { Attempt, Confidence, ErrorType, FamilyId, FamilyProgress, MockResult, ProgressState, Settings } from '../domain/types'
-
-const STORAGE_KEY = 'fsiap-prep-progress-v2'
 
 const emptyProgress = (): FamilyProgress => ({ mastery: 0, updatedAt: null, independentSuccesses: 0, hintedSuccesses: 0, failures: 0, nextReviewAt: null })
 
@@ -24,6 +24,7 @@ export const initialState: ProgressState = {
 }
 
 type Action =
+  | { type: 'hydrate'; state: ProgressState }
   | { type: 'diagnostic'; results: Array<{ familyId: FamilyId; correct: boolean; confidence: Confidence }> }
   | { type: 'attempt'; familyId: FamilyId; exerciseId: string; prompt: string; correctAnswer: string; correct: boolean; hintsUsed: number; confidence: Confidence; answer: string; errorType?: ErrorType }
   | { type: 'mock'; result: Omit<MockResult, 'id' | 'completedAt'> }
@@ -32,6 +33,7 @@ type Action =
   | { type: 'reset' }
 
 function reducer(state: ProgressState, action: Action): ProgressState {
+  if (action.type === 'hydrate') return action.state
   if (action.type === 'reset') return initialState
   if (action.type === 'settings') return { ...state, settings: { ...state.settings, ...action.settings } }
   if (action.type === 'diagnostic') {
@@ -68,10 +70,8 @@ function reducer(state: ProgressState, action: Action): ProgressState {
   return state
 }
 
-export function migrateState(parsed: Partial<ProgressState>): ProgressState {
+function normalizeState(parsed: Partial<ProgressState>): ProgressState {
   const settings = { ...initialState.settings, ...parsed.settings }
-  if (settings.examDate === LEGACY_DEFAULT_EXAM_DATE) settings.examDate = DEFAULT_EXAM_DATE
-
   return {
     ...initialState,
     ...parsed,
@@ -80,21 +80,85 @@ export function migrateState(parsed: Partial<ProgressState>): ProgressState {
   }
 }
 
-function loadState(): ProgressState {
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY)
-    return stored ? migrateState(JSON.parse(stored) as Partial<ProgressState>) : initialState
-  } catch {
-    return initialState
-  }
+type SyncStatus = 'loading' | 'saving' | 'saved' | 'error'
+
+interface ProgressValue {
+  state: ProgressState
+  dispatch: React.Dispatch<Action>
+  ready: boolean
+  syncStatus: SyncStatus
+  flush: () => Promise<void>
 }
 
-const ProgressContext = createContext<{ state: ProgressState; dispatch: React.Dispatch<Action> } | null>(null)
+const ProgressContext = createContext<ProgressValue | null>(null)
 
 export function ProgressProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(reducer, undefined, loadState)
-  useEffect(() => localStorage.setItem(STORAGE_KEY, JSON.stringify(state)), [state])
-  const value = useMemo(() => ({ state, dispatch }), [state])
+  const { user } = useAuth()
+  const [state, dispatch] = useReducer(reducer, initialState)
+  const [ready, setReady] = useState(false)
+  const [syncStatus, setSyncStatus] = useState<SyncStatus>('loading')
+  const stateRef = useRef(state)
+  const loadVersion = useRef(0)
+  const saveVersion = useRef(0)
+  const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const saveQueue = useRef<Promise<void>>(Promise.resolve())
+
+  useEffect(() => { stateRef.current = state }, [state])
+
+  useEffect(() => {
+    const version = ++loadVersion.current
+    setReady(false)
+    setSyncStatus('loading')
+    if (!user) {
+      dispatch({ type: 'hydrate', state: initialState })
+      return
+    }
+
+    loadProgress()
+      .then((progress) => {
+        if (version !== loadVersion.current) return
+        dispatch({ type: 'hydrate', state: progress ? normalizeState(progress) : initialState })
+        setReady(true)
+        setSyncStatus('saved')
+      })
+      .catch(() => {
+        if (version !== loadVersion.current) return
+        dispatch({ type: 'hydrate', state: initialState })
+        setReady(true)
+        setSyncStatus('error')
+      })
+  }, [user])
+
+  const persist = useCallback(async (snapshot: ProgressState) => {
+    if (!user) return
+    const version = ++saveVersion.current
+    setSyncStatus('saving')
+    const operation = saveQueue.current.catch(() => undefined).then(() => saveProgress(snapshot))
+    saveQueue.current = operation
+    try {
+      await operation
+      if (version === saveVersion.current) setSyncStatus('saved')
+    } catch {
+      if (version === saveVersion.current) setSyncStatus('error')
+      throw new Error('Não foi possível sincronizar o progresso.')
+    }
+  }, [user])
+
+  useEffect(() => {
+    if (!ready || !user) return
+    if (saveTimer.current) clearTimeout(saveTimer.current)
+    saveTimer.current = setTimeout(() => { void persist(state) }, 350)
+    return () => {
+      if (saveTimer.current) clearTimeout(saveTimer.current)
+    }
+  }, [persist, ready, state, user])
+
+  const flush = useCallback(async () => {
+    if (saveTimer.current) clearTimeout(saveTimer.current)
+    if (ready && user) await persist(stateRef.current)
+  }, [persist, ready, user])
+
+  const value = useMemo(() => ({ state, dispatch, ready, syncStatus, flush }), [flush, ready, state, syncStatus])
   return <ProgressContext.Provider value={value}>{children}</ProgressContext.Provider>
 }
 

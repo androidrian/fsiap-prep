@@ -1,6 +1,6 @@
 # FSIAP Prep
 
-Aplicação local de estudo adaptativo orientada ao exame de FSIAP. Mede o ponto de partida, escolhe a família de maior retorno, ensina o método, gera variantes novas, atualiza domínio/revisão, regista erros e permite testar cobertura num simulado misto.
+Aplicação web multiutilizador de estudo adaptativo orientada ao exame de FSIAP. Mede o ponto de partida, escolhe a família de maior retorno, ensina o método, gera variantes novas, atualiza domínio/revisão, regista erros e permite testar cobertura num simulado misto.
 
 ## Executar
 
@@ -8,6 +8,8 @@ Aplicação local de estudo adaptativo orientada ao exame de FSIAP. Mede o ponto
 pnpm install
 pnpm dev
 ```
+
+A autenticação e a sincronização são servidas pela API em `server/`, que usa PostgreSQL. As variáveis `PGHOST`, `PGDATABASE` e `PGUSER` selecionam a ligação; em desenvolvimento, `pnpm dev:api` inicia a API em `127.0.0.1:4180`.
 
 Validação completa:
 
@@ -33,16 +35,19 @@ A taxonomia e o índice de questões estão em `src/data/analysis.ts`. A anális
 
 ```text
 src/
+  auth/          sessão, login e cliente da API
   data/          análise dos exames e exercícios validados
   domain/
     analytics/   cobertura histórica
     exercises/   cálculos puros e motor parametrizado de exercícios
     mastery/     domínio, confiança atual e revisão
     study/       prioridade e próxima melhor ação
-  storage/       estado persistente e adaptador localStorage
+  storage/       estado adaptativo sincronizado por utilizador
   components/    navegação, fórmulas e estados visuais
   pages/         fluxos de produto
   tests/         testes de domínio e limites matemáticos
+server/          API, sessões, passwords com scrypt e PostgreSQL
+deploy/          configuração Nginx e unidade systemd
 ```
 
 ## Modelo de domínio
@@ -60,5 +65,5 @@ src/
 - a correção do simulado é objetiva e não atribui pontos parciais a raciocínio escrito;
 - o banco contém 30 templates parametrizados — três por cada uma das 10 famílias — com combinações ilimitadas de dados e opções;
 - existem 26 cenários interativos: paredes simples e compostas, rede térmica em Y, calorimetria, simetria vetorial de cargas, campos uniformes, lançamento transversal e trabalho A→B, circuitos em paralelo e malhas, carga/descarga RC, trajetórias magnéticas, campos de fios/espiras/solenoides, indução, ótica avançada, ondas EM e polarizadores;
-- o formulário aplicado, o plano adaptativo de sete dias e os simulados mistos funcionam sem backend;
-- ainda não existem sincronização entre dispositivos, OCR automático de novos materiais ou correção de desenvolvimento escrito.
+- contas distintas mantêm diagnóstico, domínio, simulados e erros isolados e sincronizados no PostgreSQL;
+- ainda não existem recuperação automática de password, OCR automático de novos materiais ou correção de desenvolvimento escrito.

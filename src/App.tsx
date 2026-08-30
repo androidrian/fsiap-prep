@@ -1,6 +1,9 @@
 import { lazy, Suspense } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
+import { useAuth } from './auth/AuthContext'
 import { Layout } from './components/Layout'
+import { AuthPage } from './pages/AuthPage'
+import { useProgress } from './storage/ProgressContext'
 
 const AnalysisPage = lazy(() => import('./pages/AnalysisPage').then((module) => ({ default: module.AnalysisPage })))
 const DashboardPage = lazy(() => import('./pages/DashboardPage').then((module) => ({ default: module.DashboardPage })))
@@ -15,6 +18,12 @@ const StudyPlanPage = lazy(() => import('./pages/StudyPlanPage').then((module) =
 const StudyPage = lazy(() => import('./pages/StudyPage').then((module) => ({ default: module.StudyPage })))
 
 export default function App() {
+  const { loading, user } = useAuth()
+  const { ready } = useProgress()
+
+  if (loading || (user && !ready)) return <div className="app-loading"><div className="brand"><span>FSIAP</span><small>PREP</small></div><p>A preparar o teu espaço…</p></div>
+  if (!user) return <AuthPage />
+
   return (
     <Layout>
       <Suspense fallback={<div className="route-loading">A preparar o próximo passo…</div>}>
