@@ -14,6 +14,8 @@ const MockExamPage = lazy(() => import('./pages/MockExamPage').then((module) => 
 const PracticePage = lazy(() => import('./pages/PracticePage').then((module) => ({ default: module.PracticePage })))
 const SimulatorsPage = lazy(() => import('./pages/SimulatorsPage').then((module) => ({ default: module.SimulatorsPage })))
 const FormulasPage = lazy(() => import('./pages/FormulasPage').then((module) => ({ default: module.FormulasPage })))
+const OfficialFormulaPage = lazy(() => import('./pages/OfficialFormulaPage').then((module) => ({ default: module.OfficialFormulaPage })))
+const UnitsPage = lazy(() => import('./pages/UnitsPage').then((module) => ({ default: module.UnitsPage })))
 const StudyPlanPage = lazy(() => import('./pages/StudyPlanPage').then((module) => ({ default: module.StudyPlanPage })))
 const StudyPage = lazy(() => import('./pages/StudyPage').then((module) => ({ default: module.StudyPage })))
 
@@ -36,6 +38,8 @@ export default function App() {
           <Route path="/practice" element={<PracticePage />} />
           <Route path="/simulators" element={<SimulatorsPage />} />
           <Route path="/formulas" element={<FormulasPage />} />
+          <Route path="/formula-sheet" element={<OfficialFormulaPage />} />
+          <Route path="/units" element={<UnitsPage />} />
           <Route path="/study-plan" element={<StudyPlanPage />} />
           <Route path="/mock-exam" element={<MockExamPage />} />
           <Route path="/mistakes" element={<MistakesPage />} />

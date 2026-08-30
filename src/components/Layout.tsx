@@ -1,4 +1,4 @@
-import { Activity, Atom, BookOpenCheck, CalendarRange, ChartNoAxesCombined, Cloud, Dumbbell, FileCheck2, FlaskConical, Gauge, ListX, LogOut, Menu, Sigma, TimerReset, UserRound, X } from 'lucide-react'
+import { Activity, Atom, BookOpenCheck, CalendarRange, ChartNoAxesCombined, Cloud, Dumbbell, FileCheck2, FileText, FlaskConical, Gauge, ListX, LogOut, Menu, Ruler, TimerReset, UserRound, X } from 'lucide-react'
 import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
@@ -12,7 +12,8 @@ const links = [
   { to: '/analysis', label: 'Mapa do exame', icon: ChartNoAxesCombined },
   { to: '/exam-exercises', label: 'Exercícios de exame', icon: FileCheck2 },
   { to: '/simulators', label: 'Simuladores', icon: FlaskConical },
-  { to: '/formulas', label: 'Formulário aplicado', icon: Sigma },
+  { to: '/units', label: 'Guia de unidades', icon: Ruler },
+  { to: '/formula-sheet', label: 'Formulário oficial', icon: FileText },
   { to: '/study-plan', label: 'Plano de estudo', icon: CalendarRange },
   { to: '/mock-exam', label: 'Simulado', icon: TimerReset },
   { to: '/mistakes', label: 'Caderno de erros', icon: ListX },
