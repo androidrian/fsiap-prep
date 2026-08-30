@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { families } from '../data/analysis'
 import { calculateCoverage } from '../domain/analytics/coverage'
-import { compositeThermalConduction, coulombForce, magneticOrbitRadius, malusIntensity, rcChargeVoltage, rcDischargeVoltage, refractionAngle, symmetricElectricField, thermalConduction, twoMeshCurrents, uniformElectricForce, uniformFieldEnergyChange, unpolarizedThroughPolarizers, withinTolerance } from '../domain/exercises/calculators'
+import { compositeThermalConduction, coulombForce, fourChargeCircle, magneticOrbitRadius, malusIntensity, rcChargeVoltage, rcDischargeVoltage, refractionAngle, seriesCapacitorDischarge, solenoidParticleDynamics, symmetricElectricField, thermalConduction, twoMeshCurrents, uniformElectricForce, uniformFieldEnergyChange, unpolarizedThroughPolarizers, withinTolerance } from '../domain/exercises/calculators'
 import { exerciseTemplateCount, generateExercise, generateMixedSet } from '../domain/exercises/generator'
 import { currentConfidence, learningState, updateMastery } from '../domain/mastery/mastery'
 import { DEFAULT_EXAM_DATE, daysUntilExam } from '../domain/study/examDate'
@@ -59,6 +59,30 @@ describe('exercise calculators', () => {
     expect(energy.electricWork).toBeCloseTo(-2.4e-13, 20)
     expect(energy.gravityWork).toBeCloseTo(5.88e-14, 20)
     expect(energy.totalPotentialChange).toBeCloseTo(1.812e-13, 20)
+  })
+  it('reproduces the four-charge circle exercise component by component', () => {
+    const result = fourChargeCircle([6e-6, 5e-6, 5e-6, -6e-6], 6)
+    expect(result.centerPotential).toBeCloseTo(2.9967e4, 0)
+    expect(result.forceOnFirst.x).toBeCloseTo(-8.626e-3, 5)
+    expect(result.forceOnFirst.y).toBeCloseTo(8.626e-3, 5)
+    expect(result.forceOnFirst.magnitude).toBeCloseTo(1.22e-2, 4)
+    expect(result.externalWorkToCenter).toBeCloseTo(-1.278e-3, 5)
+  })
+  it('reproduces the series-capacitor discharge network at 18 microseconds', () => {
+    const result = seriesCapacitorDischarge(20e-6, 90e-6, 20, 10, 15, 5, 18e-6)
+    expect(result.equivalentCapacitance).toBeCloseTo(16.364e-6, 9)
+    expect(result.initialCharge).toBeCloseTo(327.273e-6, 8)
+    expect(result.equivalentResistance).toBe(11)
+    expect(result.timeConstant).toBeCloseTo(180e-6, 9)
+    expect(result.maxCurrentInSecondBranch).toBeCloseTo(.72727, 5)
+    expect(result.chargeAtTime).toBeCloseTo(296.129e-6, 8)
+  })
+  it('combines magnetic force and gravity for the particle inside the solenoid', () => {
+    const result = solenoidParticleDynamics(840, .6, 22, 2.5 * 1.60217653e-19, 6450, 2 * 1.673e-27, 25)
+    expect(result.magneticField).toBeCloseTo(.0387044, 6)
+    expect(result.resultant.magnitude).toBeCloseTo(9.9993e-17, 20)
+    expect(result.acceleration / 1e10).toBeCloseTo(2.98844132, 7)
+    expect(result.instantaneousRadius).toBeCloseTo(1.392e-3, 6)
   })
 })
 

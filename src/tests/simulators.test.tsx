@@ -130,4 +130,44 @@ describe('interactive simulator diagrams', () => {
     expect(fieldLabel).toHaveTextContent('E → → →')
     expect(container.querySelector('.force-left')).toBeInTheDocument()
   })
+
+  it('recreates the four charges on a circle and updates the resultant vector', () => {
+    const { container } = renderSimulators('/simulators?family=electrostatics&scenario=circle&q1=6&q2=5&q3=5&q4=-6&d=6')
+    expect(screen.getByRole('button', { name: '4 cargas no círculo' })).toHaveClass('active')
+    expect(screen.getByText('29.97 kV')).toBeInTheDocument()
+    expect(screen.getByText('1.220e-2 N')).toBeInTheDocument()
+    expect(screen.getByText('-1.278e-3 J')).toBeInTheDocument()
+    const vector = container.querySelector('.charge-force-vector')!
+    const before = vector.getAttribute('x2')
+    fireEvent.change(screen.getByRole('slider', { name: /Carga Q4/ }), { target: { value: '6' } })
+    expect(vector.getAttribute('x2')).not.toBe(before)
+    expect(container.textContent).not.toMatch(/NaN|Infinity/)
+  })
+
+  it('recreates the capacitor discharge network and moves the time marker', () => {
+    const { container } = renderSimulators('/simulators?family=rc_circuits&scenario=network&c1=20&c2=90&V=20&r1=10&r2=15&rs=5&t=18')
+    expect(screen.getByRole('button', { name: '2 condensadores · rede' })).toHaveClass('active')
+    expect(screen.getByText('296.13 μC')).toBeInTheDocument()
+    expect(screen.getByText('327.27 μC')).toBeInTheDocument()
+    expect(screen.getByText('0.727 A')).toBeInTheDocument()
+    expect(screen.getByText('180.0 μs')).toBeInTheDocument()
+    const marker = container.querySelector('.rc-time-marker')!
+    const before = marker.getAttribute('cx')
+    fireEvent.change(screen.getByRole('slider', { name: /Instante t/ }), { target: { value: '180' } })
+    expect(marker.getAttribute('cx')).not.toBe(before)
+    expect(screen.getByText('120.40 μC')).toBeInTheDocument()
+  })
+
+  it('combines gravity and magnetic force in the supplied solenoid exercise', () => {
+    const { container } = renderSimulators('/simulators?family=magnetic_particles&scenario=solenoid-particle&qE=2.5&N=840&L=0.6&I=22&v=6450&mP=2&theta=25')
+    expect(screen.getByRole('button', { name: 'Partícula no solenoide' })).toHaveClass('active')
+    expect(screen.getByText('38.704 mT')).toBeInTheDocument()
+    expect(screen.getAllByText('9.999e-17 N').length).toBeGreaterThanOrEqual(1)
+    expect(screen.getByText('1.392 mm')).toBeInTheDocument()
+    const vector = container.querySelector('.resultant-vector')!
+    const before = vector.getAttribute('y2')
+    fireEvent.change(screen.getByRole('slider', { name: /Ângulo θ/ }), { target: { value: '70' } })
+    expect(vector.getAttribute('y2')).not.toBe(before)
+    expect(container.textContent).not.toMatch(/NaN|Infinity/)
+  })
 })

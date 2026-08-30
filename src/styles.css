@@ -388,3 +388,43 @@ h1, h2, h3, p { margin-top: 0; }
   .unit-register>header{display:none}.unit-register>article{grid-template-columns:1.2fr .8fr;gap:16px;padding:20px 0}.unit-register article>div:nth-child(3),.unit-register article>p{grid-column:1/-1}.unit-register article>p{padding-top:2px}
   .dimension-check>div{grid-template-columns:1fr 1fr}.dimension-check p:nth-child(2){border-right:0}.dimension-check p:nth-child(-n+2){border-bottom:1px solid var(--line)}
 }
+
+/* Three complete exam recreations supplied by the learner. */
+.charge-circle-stage,.exam-rc-stage,.solenoid-particle-stage{width:100%;height:260px;overflow:visible}
+.charge-circle-stage text,.exam-rc-stage text,.solenoid-particle-stage text{fill:var(--muted);font-size:10px}
+.charge-orbit{fill:none;stroke:var(--ink);stroke-width:2.5}
+.charge-diameters{fill:none;stroke:#aeb4bd;stroke-width:1.2}
+.charge-transfer{fill:none;stroke:var(--green);stroke-width:2;stroke-dasharray:5 4}
+.charge-center{fill:var(--paper);stroke:var(--ink);stroke-width:2}
+.charge-circle-stage .center-label,.charge-circle-stage .charge-name{fill:var(--ink);font-weight:800}
+.exam-charge{stroke:white;stroke-width:2;transition:fill .18s ease}
+.exam-charge.positive{fill:var(--blue)}.exam-charge.negative{fill:var(--red)}
+.charge-circle-stage .charge-value{fill:white;font-size:10px;font-weight:850;text-anchor:middle}
+.charge-force-vector{stroke:var(--blue);stroke-width:4;transition:x2 .22s ease,y2 .22s ease}
+.vector-tip,.resultant-tip{fill:var(--blue);transition:cx .22s ease,cy .22s ease}.force-caption,.resultant-caption{fill:var(--blue)!important;font-weight:800}
+.diameter-caption{text-anchor:middle;letter-spacing:.04em}
+.exam-metrics{display:grid;margin-bottom:16px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.exam-metrics.three{grid-template-columns:repeat(3,1fr)}.exam-metrics.four{grid-template-columns:repeat(4,1fr)}
+.exam-metrics>span{min-width:0;padding:12px;border-right:1px solid var(--line)}.exam-metrics>span:last-child{border-right:0}
+.exam-metrics small{display:block;margin-bottom:5px;color:var(--muted);font-size:8px;text-transform:uppercase;letter-spacing:.06em}
+.exam-metrics strong{display:block;font:400 14px/1.3 Georgia,serif;overflow-wrap:anywhere}
+.exam-rc-stage .circuit-wire{fill:none;stroke:var(--ink);stroke-width:2}
+.exam-rc-stage .circuit-resistor{fill:#edf4ff;stroke:var(--blue);stroke-width:2}
+.exam-rc-stage .transfer-arrow{fill:none;stroke:var(--green);stroke-width:3;stroke-dasharray:5 4}
+.exam-rc-stage .branch-current{fill:var(--blue);font-weight:750}
+.rc-mini-axes{fill:none;stroke:#9fa6b0;stroke-width:1}
+.rc-mini-curve{fill:none;stroke:var(--blue);stroke-width:3}
+.rc-time-marker{fill:var(--red);transition:cx .2s ease,cy .2s ease}
+.solenoid-shell{fill:#e9edf3;stroke:var(--ink);stroke-width:3}.solenoid-inner{fill:var(--paper);stroke:#8c95a2;stroke-width:2}.solenoid-field{fill:#edf4ff;stroke:#bfd0ec;stroke-width:1}
+.solenoid-particle{fill:var(--ink)}.solenoid-b-label{fill:var(--blue)!important;font-size:14px!important;font-weight:800}
+.angle-reference{stroke:#9ca4ae;stroke-width:1;stroke-dasharray:4 4}.theta-arc{fill:none;stroke:var(--amber);stroke-width:2}.theta-label{fill:var(--amber)!important;font-weight:800}
+.magnetic-vector{stroke:var(--amber);stroke-width:4;transition:x2 .2s ease,y2 .2s ease}.magnetic-tip{fill:var(--amber);transition:cx .2s ease,cy .2s ease}.magnetic-caption{fill:var(--amber)!important;font-weight:800}
+.gravity-vector{stroke:var(--red);stroke-width:3}.gravity-tip{fill:var(--red)}.gravity-caption{fill:var(--red)!important;font-weight:800}
+.resultant-vector{stroke:var(--blue);stroke-width:5;transition:x2 .2s ease,y2 .2s ease}
+.trajectory-hint{fill:none;stroke:#8795aa;stroke-width:1.5;stroke-dasharray:5 4}
+
+@media (max-width:680px){
+  .charge-circle-stage,.exam-rc-stage,.solenoid-particle-stage{height:220px}
+  .exam-metrics.three,.exam-metrics.four{grid-template-columns:1fr 1fr}.exam-metrics>span:nth-child(2){border-right:0}.exam-metrics>span:nth-child(-n+2){border-bottom:1px solid var(--line)}
+  .exam-metrics.three>span:last-child{grid-column:1/-1}
+}

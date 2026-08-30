@@ -91,7 +91,7 @@ export function DashboardPage() {
 
       <section className="toolbelt">
         <Link to="/practice"><Dices size={18} /><span><strong>Banco de prática</strong>30 tipos com variantes ilimitadas</span><ArrowRight size={15} /></Link>
-        <Link to="/simulators"><FlaskConical size={18} /><span><strong>Laboratórios</strong>26 cenários interativos</span><ArrowRight size={15} /></Link>
+        <Link to="/simulators"><FlaskConical size={18} /><span><strong>Laboratórios</strong>29 cenários interativos</span><ArrowRight size={15} /></Link>
         <Link to="/formula-sheet"><FileText size={18} /><span><strong>Formulário oficial</strong>PDF e transcrição navegável</span><ArrowRight size={15} /></Link>
         <Link to="/study-plan"><CalendarRange size={18} /><span><strong>Plano de 7 dias</strong>Prioridades adaptadas ao domínio</span><ArrowRight size={15} /></Link>
       </section>

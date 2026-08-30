@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState, type ComponentType } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { Formula } from '../components/Formula'
 import { familyById } from '../data/analysis'
-import { compositeThermalConduction, magneticOrbitRadius, malusIntensity, rcDischargeVoltage, refractionAngle, symmetricElectricField, twoMeshCurrents, uniformElectricForce, uniformFieldEnergyChange, unpolarizedThroughPolarizers } from '../domain/exercises/calculators'
+import { compositeThermalConduction, fourChargeCircle, magneticOrbitRadius, malusIntensity, rcDischargeVoltage, refractionAngle, seriesCapacitorDischarge, solenoidParticleDynamics, symmetricElectricField, twoMeshCurrents, uniformElectricForce, uniformFieldEnergyChange, unpolarizedThroughPolarizers } from '../domain/exercises/calculators'
 import type { FamilyId } from '../domain/types'
 
 interface SimulatorConfig {
@@ -44,7 +44,7 @@ export function SimulatorsPage() {
 
   return (
     <div className="page simulators-page">
-      <section className="page-heading simulator-heading"><div><p className="eyebrow">10 famílias · 26 cenários</p><h1>Vê a física a acontecer.</h1><p className="lede">Cada diagrama reage aos dados e cobre decisões geométricas, vetoriais e temporais recorrentes nas provas.</p></div><div className="sim-count"><strong>26</strong><span>cenários interativos</span></div></section>
+      <section className="page-heading simulator-heading"><div><p className="eyebrow">10 famílias · 29 cenários</p><h1>Vê a física a acontecer.</h1><p className="lede">Cada diagrama reage aos dados e cobre decisões geométricas, vetoriais e temporais recorrentes nas provas.</p></div><div className="sim-count"><strong>29</strong><span>cenários interativos</span></div></section>
       <section className="simulator-lab">
         <nav className="simulator-index" aria-label="Simuladores por família">
           {simulators.map(({ id, label, icon: Icon }, index) => <button key={id} className={active === id ? 'active' : ''} onClick={() => switchSimulator(id)}><span>{String(index + 1).padStart(2, '0')}</span><Icon size={16} /><strong>{label}</strong></button>)}
@@ -70,10 +70,10 @@ export function SimulatorsPage() {
 function Simulator({ active, scenario, params }: { active: FamilyId; scenario: string | null; params: Record<string, string> }) {
   if (active === 'thermal_transport') return <ThermalSimulator initialMode={scenario} params={params} />
   if (active === 'thermal_equilibrium') return <CalorimetrySimulator />
-  if (active === 'electrostatics') return <CoulombSimulator initialMode={scenario} />
+  if (active === 'electrostatics') return <CoulombSimulator initialMode={scenario} params={params} />
   if (active === 'uniform_fields') return <UniformFieldSimulator initialMode={scenario} params={params} />
   if (active === 'dc_circuits') return <DCSimulator initialMode={scenario} />
-  if (active === 'rc_circuits') return <RCSimulator initialMode={scenario} />
+  if (active === 'rc_circuits') return <RCSimulator initialMode={scenario} params={params} />
   if (active === 'magnetic_particles') return <MagneticParticleSimulator initialMode={scenario} params={params} />
   if (active === 'induction_sources') return <InductionSimulator initialMode={scenario} />
   if (active === 'optics') return <OpticsSimulator initialMode={scenario} />
@@ -123,8 +123,8 @@ function CalorimetrySimulator() {
   return <><div className="beaker-stage"><div className="beaker hot-beaker" style={{ height: `${70 + hotMass * 30}px` }}><span>{hotTemp}°</span></div><strong>+</strong><div className="beaker cold-beaker" style={{ height: `${70 + coldMass * 30}px` }}><span>{coldTemp}°</span></div><strong>→</strong><div className="beaker mixed-beaker"><span>{final.toFixed(1)}°C</span></div></div><ResultStrip label="Temperatura de equilíbrio" value={`${final.toFixed(1)} °C`} formula="\\sum Q=0" secondary="mesmo material · sem perdas" /><Control label="Massa quente" value={hotMass} min={0.2} max={3} step={0.1} onChange={setHotMass} unit="kg" /><Control label="Massa fria" value={coldMass} min={0.2} max={3} step={0.1} onChange={setColdMass} unit="kg" /><Control label="Temperatura quente" value={hotTemp} min={30} max={95} step={1} onChange={setHotTemp} unit="°C" /></>
 }
 
-function CoulombSimulator({ initialMode }: { initialMode: string | null }) {
-  const [mode, setMode] = useState<'symmetry' | 'pair'>(initialMode === 'pair' ? 'pair' : 'symmetry')
+function CoulombSimulator({ initialMode, params }: { initialMode: string | null; params: Record<string, string> }) {
+  const [mode, setMode] = useState<'symmetry' | 'pair' | 'circle'>(initialMode === 'pair' || initialMode === 'circle' ? initialMode : 'symmetry')
   const [distance, setDistance] = useState(2); const [q1, setQ1] = useState(2); const [q2, setQ2] = useState(-3)
   const [side, setSide] = useState(1.5); const [height, setHeight] = useState(2); const [symmetricCharge, setSymmetricCharge] = useState(3)
   const value = 8.99e-3 * Math.abs(q1 * q2) / distance ** 2
@@ -132,9 +132,38 @@ function CoulombSimulator({ initialMode }: { initialMode: string | null }) {
   const verticalField = Math.abs(symmetricElectricField(symmetricCharge * 1e-6, side, height).vertical)
   const vectorScale = 42
   const dx = side / vectorDistance * vectorScale; const dy = height / vectorDistance * vectorScale
-  return <><ScenarioTabs value={mode} onChange={setMode} options={[[ 'symmetry', 'Componentes que anulam'], ['pair', 'Duas cargas']]} />
+  if (mode === 'circle') return <><ScenarioTabs value={mode} onChange={setMode} options={[[ 'symmetry', 'Componentes que anulam'], ['pair', 'Duas cargas'], ['circle', '4 cargas no círculo']]} /><FourChargeCircleScenario params={params} /></>
+  return <><ScenarioTabs value={mode} onChange={setMode} options={[[ 'symmetry', 'Componentes que anulam'], ['pair', 'Duas cargas'], ['circle', '4 cargas no círculo']]} />
     {mode === 'pair' && <><div className="particle-stage"><div className={`charge ${q1 >= 0 ? 'positive' : 'negative'}`}>{q1 > 0 ? '+' : ''}{q1}</div><div className="distance-line" style={{ width: `${80 + distance * 35}px` }}><span>{distance.toFixed(1)} m</span></div><div className={`charge ${q2 >= 0 ? 'positive' : 'negative'}`}>{q2 > 0 ? '+' : ''}{q2}</div></div><ResultStrip label="Força" value={`${value.toFixed(4)} N`} formula="F=k|q_1q_2|/r^2" secondary={q1 * q2 < 0 ? 'atração' : 'repulsão'} /><Control label="Distância r" value={distance} min={0.5} max={5} step={0.1} onChange={setDistance} unit="m" /><Control label="Carga q₁" value={q1} min={-6} max={6} step={1} onChange={setQ1} unit="μC" /><Control label="Carga q₂" value={q2} min={-6} max={6} step={1} onChange={setQ2} unit="μC" /></>}
     {mode === 'symmetry' && <><svg className="vector-stage" viewBox="0 0 480 230"><line className="axis-line-dashed" x1="240" y1="15" x2="240" y2="210" /><line className="geometry-line" x1="105" y1="185" x2="240" y2="55" /><line className="geometry-line" x1="375" y1="185" x2="240" y2="55" /><circle className="charge-dot" cx="105" cy="185" r="20" /><circle className="charge-dot" cx="375" cy="185" r="20" /><circle className="test-dot" cx="240" cy="55" r="8" /><text x="91" y="191">+q</text><text x="361" y="191">+q</text><text x="247" y="49">P</text><path className="vector-arrow faded" d={`M240 55l${-dx} ${-dy}`} /><path className="vector-arrow faded" d={`M240 55l${dx} ${-dy}`} /><path className="vector-arrow total" d={`M240 55v${-Math.min(82, 30 + verticalField / 600)}`} /><text x="251" y="25">E⃗ total</text><text x="210" y="219">Ex₁ + Ex₂ = 0</text></svg><ResultStrip label="Campo resultante em P" value={`${verticalField.toFixed(0)} N/C`} formula="E_y=2(kq/r^2)\\,y/r" secondary={`componentes horizontais anulam · r=${vectorDistance.toFixed(2)} m`} /><Control label="Meia-separação a" value={side} min={0.5} max={3} step={0.1} onChange={setSide} unit="m" /><Control label="Altura y" value={height} min={0.5} max={4} step={0.1} onChange={setHeight} unit="m" /><Control label="Cada carga q" value={symmetricCharge} min={1} max={8} step={1} onChange={setSymmetricCharge} unit="μC" /></>}
+  </>
+}
+
+function FourChargeCircleScenario({ params }: { params: Record<string, string> }) {
+  const [q1, setQ1] = useState(numberParam(params, 'q1', 6))
+  const [q2, setQ2] = useState(numberParam(params, 'q2', 5))
+  const [q3, setQ3] = useState(numberParam(params, 'q3', 5))
+  const [q4, setQ4] = useState(numberParam(params, 'q4', -6))
+  const [diameter, setDiameter] = useState(numberParam(params, 'd', 6))
+  const result = fourChargeCircle([q1 * 1e-6, q2 * 1e-6, q3 * 1e-6, q4 * 1e-6], diameter)
+  const forceScale = result.forceOnFirst.magnitude > 0 ? 62 / result.forceOnFirst.magnitude : 0
+  const forceEndX = 185 + result.forceOnFirst.x * forceScale
+  const forceEndY = 50 - result.forceOnFirst.y * forceScale
+  const charges = [{ x: 185, y: 50, value: q1, label: 'Q1' }, { x: 295, y: 50, value: q2, label: 'Q2' }, { x: 185, y: 160, value: q3, label: 'Q3' }, { x: 295, y: 160, value: q4, label: 'Q4' }]
+  return <>
+    <svg className="charge-circle-stage" viewBox="0 0 480 220" role="img" aria-label="Quatro cargas igualmente afastadas do centro P">
+      <circle className="charge-orbit" cx="240" cy="105" r="78" />
+      <path className="charge-diameters" d="M185 50L295 160M295 50L185 160" />
+      <path className="charge-transfer" d="M185 50Q203 83 240 105" />
+      <circle className="charge-center" cx="240" cy="105" r="6" /><text className="center-label" x="248" y="101">P</text>
+      {charges.map((charge) => <g key={charge.label}><circle className={charge.value >= 0 ? 'exam-charge positive' : 'exam-charge negative'} cx={charge.x} cy={charge.y} r="18" /><text className="charge-value" x={charge.x} y={charge.y + 4}>{charge.value >= 0 ? '+' : ''}{charge.value}</text><text className="charge-name" x={charge.x - 11} y={charge.y - 25}>{charge.label}</text></g>)}
+      {result.forceOnFirst.magnitude > 0 && <><line className="charge-force-vector" x1="185" y1="50" x2={forceEndX} y2={forceEndY} /><circle className="vector-tip" cx={forceEndX} cy={forceEndY} r="4" /><text className="force-caption" x={forceEndX - 10} y={forceEndY - 8}>F⃗R</text></>}
+      <text className="diameter-caption" x="214" y="207">D = {diameter.toFixed(1)} m</text>
+    </svg>
+    <ResultStrip label="Potencial elétrico no centro P" value={`${(result.centerPotential / 1000).toFixed(2)} kV`} formula="V_P=k\sum_i q_i/R" secondary={`R=${(diameter / 2).toFixed(2)} m · potencial é escalar: somam-se cargas com sinal`} />
+    <div className="exam-metrics three"><span><small>Força resultante em Q1</small><strong>{result.forceOnFirst.magnitude.toExponential(3)} N</strong></span><span><small>Componentes Fx · Fy</small><strong>{result.forceOnFirst.x.toExponential(2)} · {result.forceOnFirst.y.toExponential(2)} N</strong></span><span><small>Trabalho externo Q1 → P</small><strong>{result.externalWorkToCenter.toExponential(3)} J</strong></span></div>
+    <Control label="Carga Q1" value={q1} min={-10} max={10} step={1} onChange={setQ1} unit="μC" /><Control label="Carga Q2" value={q2} min={-10} max={10} step={1} onChange={setQ2} unit="μC" /><Control label="Carga Q3" value={q3} min={-10} max={10} step={1} onChange={setQ3} unit="μC" /><Control label="Carga Q4" value={q4} min={-10} max={10} step={1} onChange={setQ4} unit="μC" /><Control label="Diâmetro do círculo" value={diameter} min={1} max={12} step={0.5} onChange={setDiameter} unit="m" />
+    <p className="balance-note"><strong>Leitura do diagrama:</strong> o potencial em P soma escalares; a força em Q1 exige somar vetores; no trabalho para P exclui-se o potencial criado pela própria Q1.</p>
   </>
 }
 
@@ -171,16 +200,42 @@ function DCSimulator({ initialMode }: { initialMode: string | null }) {
   </>
 }
 
-function RCSimulator({ initialMode }: { initialMode: string | null }) {
-  const [mode, setMode] = useState<'charge' | 'discharge'>(initialMode === 'discharge' ? 'discharge' : 'charge')
+function RCSimulator({ initialMode, params }: { initialMode: string | null; params: Record<string, string> }) {
+  const [mode, setMode] = useState<'charge' | 'discharge' | 'network'>(initialMode === 'discharge' || initialMode === 'network' ? initialMode : 'charge')
   const [time, setTime] = useState(1); const [tau, setTau] = useState(1); const [voltage, setVoltage] = useState(10)
   const value = mode === 'charge' ? voltage * (1 - Math.exp(-time / tau)) : rcDischargeVoltage(voltage, time, tau)
   const points = Array.from({ length: 41 }, (_, index) => { const t = index / 10; const y = mode === 'charge' ? voltage * (1 - Math.exp(-t / tau)) : voltage * Math.exp(-t / tau); return `${index * 10},${150 - y / voltage * 120}` }).join(' ')
-  return <><ScenarioTabs value={mode} onChange={setMode} options={[[ 'charge', 'Carga'], ['discharge', 'Descarga']]} /><svg className="rc-chart" viewBox="0 0 420 180" role="img" aria-label={`Curva de ${mode === 'charge' ? 'carga' : 'descarga'} de um condensador`}><path d="M10 150H410M10 150V10" /><polyline points={points} /><circle cx={Math.min(410,time * 100 + 10)} cy={150 - value / voltage * 120} r="6" /><text x="18" y="20">{mode === 'charge' ? 'Vf' : 'V0'}</text><text x="382" y="168">t</text></svg><ResultStrip label="Tensão no condensador" value={`${value.toFixed(2)} V`} formula={mode === 'charge' ? 'V_C=V_f(1-e^{-t/\\tau})' : 'V_C=V_0e^{-t/\\tau}'} secondary={`${(value / voltage * 100).toFixed(1)}% de ${voltage} V · em 1τ: ${mode === 'charge' ? '63,2%' : '36,8%'}`} /><Control label="Tempo t" value={time} min={0} max={4} step={0.1} onChange={setTime} unit="s" /><Control label="Constante τ=RC" value={tau} min={0.3} max={3} step={0.1} onChange={setTau} unit="s" /><Control label={mode === 'charge' ? 'Tensão final' : 'Tensão inicial'} value={voltage} min={3} max={24} step={1} onChange={setVoltage} unit="V" /></>
+  if (mode === 'network') return <><ScenarioTabs value={mode} onChange={setMode} options={[[ 'charge', 'Carga'], ['discharge', 'Descarga'], ['network', '2 condensadores · rede']]} /><CapacitorNetworkScenario params={params} /></>
+  return <><ScenarioTabs value={mode} onChange={setMode} options={[[ 'charge', 'Carga'], ['discharge', 'Descarga'], ['network', '2 condensadores · rede']]} /><svg className="rc-chart" viewBox="0 0 420 180" role="img" aria-label={`Curva de ${mode === 'charge' ? 'carga' : 'descarga'} de um condensador`}><path d="M10 150H410M10 150V10" /><polyline points={points} /><circle cx={Math.min(410,time * 100 + 10)} cy={150 - value / voltage * 120} r="6" /><text x="18" y="20">{mode === 'charge' ? 'Vf' : 'V0'}</text><text x="382" y="168">t</text></svg><ResultStrip label="Tensão no condensador" value={`${value.toFixed(2)} V`} formula={mode === 'charge' ? 'V_C=V_f(1-e^{-t/\\tau})' : 'V_C=V_0e^{-t/\\tau}'} secondary={`${(value / voltage * 100).toFixed(1)}% de ${voltage} V · em 1τ: ${mode === 'charge' ? '63,2%' : '36,8%'}`} /><Control label="Tempo t" value={time} min={0} max={4} step={0.1} onChange={setTime} unit="s" /><Control label="Constante τ=RC" value={tau} min={0.3} max={3} step={0.1} onChange={setTau} unit="s" /><Control label={mode === 'charge' ? 'Tensão final' : 'Tensão inicial'} value={voltage} min={3} max={24} step={1} onChange={setVoltage} unit="V" /></>
+}
+
+function CapacitorNetworkScenario({ params }: { params: Record<string, string> }) {
+  const [c1, setC1] = useState(numberParam(params, 'c1', 20)); const [c2, setC2] = useState(numberParam(params, 'c2', 90)); const [initialVoltage, setInitialVoltage] = useState(numberParam(params, 'V', 20))
+  const [r1, setR1] = useState(numberParam(params, 'r1', 10)); const [r2, setR2] = useState(numberParam(params, 'r2', 15)); const [seriesR, setSeriesR] = useState(numberParam(params, 'rs', 5)); const [timeMicroseconds, setTimeMicroseconds] = useState(numberParam(params, 't', 18))
+  const result = seriesCapacitorDischarge(c1 * 1e-6, c2 * 1e-6, initialVoltage, r1, r2, seriesR, timeMicroseconds * 1e-6)
+  const chargeRatio = result.initialCharge > 0 ? result.chargeAtTime / result.initialCharge : 0
+  const chartPoints = Array.from({ length: 51 }, (_, index) => `${35 + index * 7.8},${225 - Math.exp(-index / 10) * 48}`).join(' ')
+  const markerX = 35 + Math.min(50, timeMicroseconds / (result.timeConstant * 1e6) * 10) * 7.8
+  const markerY = 225 - chargeRatio * 48
+  return <>
+    <svg className="exam-rc-stage" viewBox="0 0 480 250" role="img" aria-label="Dois condensadores em série a descarregar numa resistência em série com dois ramos paralelos">
+      <path className="circuit-wire" d="M35 62H78M96 38V86M112 38V86M112 62H148M166 38V86M182 38V86M182 62H225" />
+      <text x="77" y="29">C₁ {c1.toFixed(0)} μF</text><text x="148" y="29">C₂ {c2.toFixed(0)} μF</text><text x="35" y="108">carregados a {initialVoltage.toFixed(1)} V</text>
+      <path className="transfer-arrow" d="M213 62H268" /><text x="232" y="50">liga</text>
+      <path className="circuit-wire" d="M275 62H310M360 62H435V132H390M340 132H302V92M302 92H390M390 92V172H340M290 172H275V62" />
+      <rect className="circuit-resistor" x="310" y="50" width="50" height="24" /><rect className="circuit-resistor" x="340" y="80" width="50" height="24" /><rect className="circuit-resistor" x="290" y="160" width="50" height="24" />
+      <text x="318" y="67">{seriesR.toFixed(0)} Ω</text><text x="348" y="97">{r1.toFixed(0)} Ω</text><text x="298" y="177">{r2.toFixed(0)} Ω</text><text className="branch-current" x="345" y="146">I₁₅(0)={result.maxCurrentInSecondBranch.toFixed(3)} A</text>
+      <path className="rc-mini-axes" d="M35 225H435M35 225V168" /><polyline className="rc-mini-curve" points={chartPoints} /><circle className="rc-time-marker" cx={markerX} cy={markerY} r="5" /><text x="38" y="165">Q/Q₀</text><text x="395" y="242">5τ</text>
+    </svg>
+    <ResultStrip label={`Carga após ${timeMicroseconds.toFixed(1)} μs`} value={`${(result.chargeAtTime * 1e6).toFixed(2)} μC`} formula="Q(t)=Q_0e^{-t/(R_{eq}C_{eq})}" secondary={`Q/Q₀=${(chargeRatio * 100).toFixed(1)}% · Req=${result.equivalentResistance.toFixed(2)} Ω`} />
+    <div className="exam-metrics four"><span><small>Capacidade equivalente</small><strong>{(result.equivalentCapacitance * 1e6).toFixed(2)} μF</strong></span><span><small>Carga inicial Q₀</small><strong>{(result.initialCharge * 1e6).toFixed(2)} μC</strong></span><span><small>Corrente máxima em 15 Ω</small><strong>{result.maxCurrentInSecondBranch.toFixed(3)} A</strong></span><span><small>Constante de tempo τ</small><strong>{(result.timeConstant * 1e6).toFixed(1)} μs</strong></span></div>
+    <Control label="Condensador C₁" value={c1} min={5} max={120} step={5} onChange={setC1} unit="μF" /><Control label="Condensador C₂" value={c2} min={5} max={120} step={5} onChange={setC2} unit="μF" /><Control label="Tensão inicial" value={initialVoltage} min={2} max={40} step={1} onChange={setInitialVoltage} unit="V" /><Control label="Resistência em paralelo R₁" value={r1} min={2} max={30} step={1} onChange={setR1} unit="Ω" /><Control label="Resistência em paralelo R₂" value={r2} min={2} max={30} step={1} onChange={setR2} unit="Ω" /><Control label="Resistência em série" value={seriesR} min={1} max={20} step={1} onChange={setSeriesR} unit="Ω" /><Control label="Instante t" value={timeMicroseconds} min={0} max={900} step={1} onChange={setTimeMicroseconds} unit="μs" />
+    <p className="balance-note"><strong>Sequência de cálculo:</strong> reduz primeiro os condensadores em série; depois reduz 10 Ω ∥ 15 Ω e soma 5 Ω; a corrente de 15 Ω exige a tensão do ramo paralelo, não 20 V diretamente.</p>
+  </>
 }
 
 function MagneticParticleSimulator({ initialMode, params }: { initialMode: string | null; params: Record<string, string> }) {
-  const [mode, setMode] = useState<'particle' | 'wire' | 'loop'>(initialMode === 'wire' || initialMode === 'loop' ? initialMode : 'particle')
+  const [mode, setMode] = useState<'particle' | 'wire' | 'loop' | 'solenoid-particle'>(initialMode === 'wire' || initialMode === 'loop' || initialMode === 'solenoid-particle' ? initialMode : 'particle')
   const [velocity, setVelocity] = useState(numberParam(params, 'v', 45000) / 1000); const [field, setField] = useState(numberParam(params, 'B', 4)); const [mass, setMass] = useState(numberParam(params, 'mass', 4))
   const [chargeSign, setChargeSign] = useState(1); const [fieldDirection, setFieldDirection] = useState(-1)
   const [current, setCurrent] = useState(numberParam(params, 'I', 8)); const [wireDistance, setWireDistance] = useState(numberParam(params, 'r', 0.08))
@@ -195,10 +250,38 @@ function MagneticParticleSimulator({ initialMode, params }: { initialMode: strin
   const loopField = 4 * Math.PI * 1e-7 * turns * loopCurrent / (2 * loopRadius)
   const sampleRadius = 48 + (wireDistance - 0.005) / 0.195 * 112
 
-  return <><ScenarioTabs value={mode} onChange={setMode} options={[[ 'particle', 'Partícula em B'], ['wire', 'Campo de um fio'], ['loop', 'Campo de uma espira']]} />
+  if (mode === 'solenoid-particle') return <><ScenarioTabs value={mode} onChange={setMode} options={[[ 'particle', 'Partícula em B'], ['wire', 'Campo de um fio'], ['loop', 'Campo de uma espira'], ['solenoid-particle', 'Partícula no solenoide']]} /><SolenoidParticleScenario params={params} /></>
+  return <><ScenarioTabs value={mode} onChange={setMode} options={[[ 'particle', 'Partícula em B'], ['wire', 'Campo de um fio'], ['loop', 'Campo de uma espira'], ['solenoid-particle', 'Partícula no solenoide']]} />
     {mode === 'particle' && <><div className="source-kind"><span>Orientações</span><div><button className={chargeSign > 0 ? 'active' : ''} onClick={() => setChargeSign(1)}>q positiva</button><button className={chargeSign < 0 ? 'active' : ''} onClick={() => setChargeSign(-1)}>q negativa</button><button className={fieldDirection < 0 ? 'active' : ''} onClick={() => setFieldDirection(-1)}>B ⊗</button><button className={fieldDirection > 0 ? 'active' : ''} onClick={() => setFieldDirection(1)}>B ⊙</button></div></div><svg className="orbit-stage" viewBox="0 0 480 210"><defs><pattern id="crosses" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M8 8l8 8m0-8l-8 8" /></pattern></defs><rect x="35" y="18" width="410" height="170" fill="url(#crosses)" /><path d={`M240 188 A${arcRadius} ${arcRadius} 0 0 ${direction > 0 ? 1 : 0} ${arcEndX} ${arcEndY}`} /><circle cx="240" cy="188" r="6" /><text x="250" y="178">v ↑</text><text x="48" y="40">B {fieldDirection < 0 ? '⊗' : '⊙'}</text><text x={arcEndX + (direction > 0 ? 5 : -24)} y={arcEndY - 5}>r visual</text></svg><ResultStrip label="Raio da trajetória" value={`${radius.toFixed(2)} m`} formula="r=mv/(|q|B)" secondary={`curvatura para ${direction > 0 ? 'a direita' : 'a esquerda'} · escala visual logarítmica`} /><Control label="Velocidade" value={velocity} min={0.5} max={90} step={0.25} onChange={setVelocity} unit="km/s" /><Control label="Campo B" value={field} min={0.1} max={12} step={0.05} onChange={setField} unit="mT" /><Control label="Massa" value={mass} min={0.01} max={10} step={0.01} onChange={setMass} unit="×10⁻²⁵ kg" /></>}
     {mode === 'wire' && <><svg className={`field-source-stage ${current === 0 ? 'zero-field' : ''}`} viewBox="0 0 480 210"><circle className="field-ring ring-a" cx="240" cy="105" r="48" /><circle className="field-ring ring-b" cx="240" cy="105" r="92" /><circle className="field-ring ring-c" cx="240" cy="105" r="140" /><circle className="wire-core" cx="240" cy="105" r="18" /><text className="wire-symbol" x="234" y="112">{current > 0 ? '⊙' : current < 0 ? '⊗' : '0'}</text>{current !== 0 && <text className={current > 0 ? 'field-sense' : 'field-sense reverse'} x="300" y="62">{current > 0 ? '↺' : '↻'}</text>}<line className="radius-guide" x1="240" y1="105" x2={240 + sampleRadius} y2="105" /><circle className="sample-point" cx={240 + sampleRadius} cy="105" r="5" /><text x="260" y="28">regra da mão direita</text><text x={245 + sampleRadius / 2} y="98">r</text></svg><ResultStrip label="Campo à distância r" value={`${(wireField * 1e6).toFixed(2)} μT`} formula="B=\\mu_0I/(2\\pi r)" secondary={current === 0 ? 'I=0: não existe campo magnético criado pelo fio' : `sentido ${current > 0 ? 'anti-horário' : 'horário'} · as circunferências não mudam; muda o ponto de medição`} /><Control label="Corrente I" value={current} min={-15} max={15} step={0.5} onChange={setCurrent} unit="A" /><Control label="Distância r" value={wireDistance} min={0.005} max={0.2} step={0.005} onChange={setWireDistance} unit="m" /></>}
     {mode === 'loop' && <><div className="source-kind"><span>Sentido da corrente</span><div><button className={loopDirection > 0 ? 'active' : ''} onClick={() => setLoopDirection(1)}>anti-horário</button><button className={loopDirection < 0 ? 'active' : ''} onClick={() => setLoopDirection(-1)}>horário</button></div></div><svg className="field-source-stage" viewBox="0 0 480 210"><ellipse className="loop-wire" cx="240" cy="105" rx={70 + loopRadius * 300} ry="45" /><ellipse className="loop-wire faint" cx="240" cy="105" rx={62 + loopRadius * 300} ry="38" /><path className="axis-field" d="M80 105H400" /><path className={loopDirection > 0 ? 'field-arrow' : 'field-arrow reverse'} d={loopDirection > 0 ? 'M195 52c35-22 75-18 98 4' : 'M293 56c-35-22-75-18-98-4'} /><text x="92" y="92">B no centro {loopDirection > 0 ? '⊙' : '⊗'}</text><text x="210" y="112">{turns} espiras</text></svg><ResultStrip label="Campo no centro" value={`${(loopField * 1e6).toFixed(2)} μT`} formula="B=\\mu_0NI/(2R)" secondary={`B ${loopDirection > 0 ? 'sai do plano' : 'entra no plano'} pela regra da mão direita`} /><Control label="Corrente I" value={loopCurrent} min={1} max={15} step={1} onChange={setLoopCurrent} unit="A" /><Control label="Número de espiras" value={turns} min={1} max={80} step={1} onChange={setTurns} unit="" /><Control label="Raio R" value={loopRadius} min={0.04} max={0.25} step={0.01} onChange={setLoopRadius} unit="m" /></>}
+  </>
+}
+
+function SolenoidParticleScenario({ params }: { params: Record<string, string> }) {
+  const [turns, setTurns] = useState(numberParam(params, 'N', 840)); const [length, setLength] = useState(numberParam(params, 'L', .6)); const [current, setCurrent] = useState(numberParam(params, 'I', 22))
+  const [chargeInE, setChargeInE] = useState(numberParam(params, 'qE', 2.5)); const [speed, setSpeed] = useState(numberParam(params, 'v', 6450)); const [massInProtons, setMassInProtons] = useState(numberParam(params, 'mP', 2)); const [theta, setTheta] = useState(numberParam(params, 'theta', 25))
+  const protonMass = 1.673e-27
+  const result = solenoidParticleDynamics(turns, length, current, chargeInE * 1.60217653e-19, speed, massInProtons * protonMass, theta)
+  const thetaRad = theta * Math.PI / 180
+  const magneticEnd = { x: 240 - Math.cos(thetaRad) * 78, y: 108 - Math.sin(thetaRad) * 78 }
+  const resultAngle = Math.atan2(result.resultant.y, result.resultant.x)
+  const resultantEnd = { x: 240 + Math.cos(resultAngle) * 92, y: 108 - Math.sin(resultAngle) * 92 }
+  return <>
+    <svg className="solenoid-particle-stage" viewBox="0 0 480 245" role="img" aria-label="Partícula negativa no interior de um solenoide vista de perfil">
+      <defs><pattern id="solenoid-dots" width="26" height="26" patternUnits="userSpaceOnUse"><circle cx="13" cy="13" r="2" /></pattern></defs>
+      <circle className="solenoid-shell" cx="240" cy="116" r="100" /><circle className="solenoid-inner" cx="240" cy="116" r="89" /><circle className="solenoid-field" cx="240" cy="116" r="82" fill="url(#solenoid-dots)" />
+      <text className="solenoid-b-label" x="307" y="185">B ⊙</text><circle className="solenoid-particle" cx="240" cy="108" r="8" /><text x="248" y="103">q = −{chargeInE.toFixed(1)}e</text>
+      <line className="angle-reference" x1="240" y1="108" x2="145" y2="108" /><path className="theta-arc" d={`M205 108 A35 35 0 0 1 ${240 - Math.cos(thetaRad) * 35} ${108 - Math.sin(thetaRad) * 35}`} /><text className="theta-label" x="194" y="94">θ={theta.toFixed(0)}°</text>
+      <line className="magnetic-vector" x1="240" y1="108" x2={magneticEnd.x} y2={magneticEnd.y} /><circle className="magnetic-tip" cx={magneticEnd.x} cy={magneticEnd.y} r="4" /><text className="magnetic-caption" x={magneticEnd.x - 8} y={magneticEnd.y - 8}>Fₘ</text>
+      <line className="gravity-vector" x1="240" y1="108" x2="240" y2="158" /><circle className="gravity-tip" cx="240" cy="158" r="4" /><text className="gravity-caption" x="248" y="157">P=mg</text>
+      <line className="resultant-vector" x1="240" y1="108" x2={resultantEnd.x} y2={resultantEnd.y} /><circle className="resultant-tip" cx={resultantEnd.x} cy={resultantEnd.y} r="4" /><text className="resultant-caption" x={resultantEnd.x - 10} y={resultantEnd.y - 8}>F⃗R</text>
+      <path className="trajectory-hint" d="M240 108Q205 52 170 71" /><text x="24" y="225">vetores desenhados para leitura; comprimentos não estão à mesma escala</text>
+    </svg>
+    <ResultStrip label="Resultante das forças" value={`${result.resultant.magnitude.toExponential(3)} N`} formula="\vec F_R=\vec F_m+m\vec g" secondary={`B=${(result.magneticField * 1000).toFixed(3)} mT · Fm/Fg=${(result.magneticForce / result.weight).toExponential(2)}`} />
+    <div className="exam-metrics four"><span><small>Campo do solenoide</small><strong>{(result.magneticField * 1000).toFixed(3)} mT</strong></span><span><small>Força magnética</small><strong>{result.magneticForce.toExponential(3)} N</strong></span><span><small>Aceleração</small><strong>{result.acceleration.toExponential(3)} m/s²</strong></span><span><small>Raio instantâneo</small><strong>{(result.instantaneousRadius * 1000).toFixed(3)} mm</strong></span></div>
+    <Control label="Espiras N" value={turns} min={100} max={1400} step={20} onChange={setTurns} unit="" /><Control label="Comprimento do solenoide" value={length} min={0.2} max={1.2} step={0.05} onChange={setLength} unit="m" /><Control label="Corrente I" value={current} min={2} max={35} step={1} onChange={setCurrent} unit="A" /><Control label="Módulo da carga" value={chargeInE} min={0.5} max={6} step={0.5} onChange={setChargeInE} unit="e" /><Control label="Velocidade" value={speed} min={1000} max={15000} step={250} onChange={setSpeed} unit="m/s" /><Control label="Massa" value={massInProtons} min={0.5} max={8} step={0.5} onChange={setMassInProtons} unit="mₚ" /><Control label="Ângulo θ" value={theta} min={0} max={90} step={1} onChange={setTheta} unit="°" />
+    <p className="balance-note"><strong>Escala física:</strong> com os valores do enunciado, Fm é cerca de três mil milhões de vezes maior do que o peso. A gravidade entra na soma, mas quase não altera o módulo nem o raio.</p>
   </>
 }
 

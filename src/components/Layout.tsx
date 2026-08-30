@@ -63,7 +63,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           </div>
           <div className="sidebar-note">
             <span>Base histórica</span>
-            <strong>30 templates · 26 cenários</strong>
+            <strong>30 templates · 29 cenários</strong>
             <p>Métricas calculadas apenas dos documentos fornecidos.</p>
           </div>
         </div>

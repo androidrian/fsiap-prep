@@ -14,6 +14,27 @@ export interface ExamExercise {
 
 export const examExercises: ExamExercise[] = [
   {
+    id: 'user-provided-p1-four-charges', exam: 'Enunciado fornecido', number: 1,
+    sourcePath: 'Imagem fornecida pelo utilizador · 30/08/2026', familyIds: ['electrostatics'], hasFigure: true,
+    statement: 'Quatro cargas estão à mesma distância do ponto P: Q₁ = 6 μC, Q₂ = Q₃ = 5 μC e Q₄ = −6 μC. As cargas ocupam os extremos de dois diâmetros perpendiculares de um círculo com diâmetro 6 m e estão no mesmo plano.',
+    parts: ['Determine o potencial elétrico no ponto P devido às quatro cargas.', 'Determine a força elétrica resultante sobre Q₁ devido às restantes cargas.', 'Determine o trabalho externo necessário para levar Q₁ da posição inicial até P.'],
+    lab: { family: 'electrostatics', scenario: 'circle', label: 'Simular as 4 cargas no círculo', coverage: 'direct', params: { q1: '6', q2: '5', q3: '5', q4: '-6', d: '6' } },
+  },
+  {
+    id: 'user-provided-p2-capacitor-network', exam: 'Enunciado fornecido', number: 2,
+    sourcePath: 'Imagem fornecida pelo utilizador · 30/08/2026', familyIds: ['rc_circuits', 'dc_circuits'], hasFigure: false,
+    statement: 'Dois condensadores de 20,0 μF e 90,0 μF são ligados em série e carregados a 20,0 V. Depois ligam-se a uma rede em que 10 Ω está em paralelo com 15 Ω e essa associação está em série com 5,0 Ω.',
+    parts: ['Determine a carga inicial da associação de condensadores.', 'Determine a corrente máxima que atravessa a resistência de 15 Ω.', 'Determine a carga da associação ao fim de 18,0 μs.'],
+    lab: { family: 'rc_circuits', scenario: 'network', label: 'Montar condensadores e resistências', coverage: 'direct', params: { c1: '20', c2: '90', V: '20', r1: '10', r2: '15', rs: '5', t: '18' } },
+  },
+  {
+    id: 'user-provided-p3-solenoid-particle', exam: 'Enunciado fornecido', number: 3,
+    sourcePath: 'Imagem fornecida pelo utilizador · 30/08/2026', familyIds: ['magnetic_particles'], hasFigure: true,
+    statement: 'Uma partícula negativa com q = −2,5e é lançada num solenoide de comprimento 60 cm, 840 espiras e corrente 22 A. A partícula viaja a 6450 m/s, tem massa igual ao dobro da massa do protão e também está sujeita à gravidade.',
+    parts: ['Determine o módulo da resultante das forças.', 'Determine o módulo da aceleração quando θ = 25°.', 'Determine o raio instantâneo da trajetória nesse instante.'],
+    lab: { family: 'magnetic_particles', scenario: 'solenoid-particle', label: 'Seguir a partícula no solenoide', coverage: 'direct', params: { qE: '2.5', N: '840', L: '0.6', I: '22', v: '6450', mP: '2', theta: '25' } },
+  },
+  {
     id: 'e1617n-p2-full', exam: '2016/17 · Normal', number: 2,
     sourcePath: 'FSIAP/Felix-Felicis/FSIAP-2019-2020-no-underscore/Exames/2016-2017/Normal.pdf', familyIds: ['uniform_fields'], hasFigure: true,
     statement: 'Uma partícula carregada positivamente, com q = 3,0×10⁻¹⁵ C, é lançada num campo elétrico uniforme de intensidade E = 2,0×10³ V/m. De A para B desloca-se 4,0 cm no sentido oposto ao campo e desce 3,0 cm.',
