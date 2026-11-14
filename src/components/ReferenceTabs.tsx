@@ -1,7 +1,8 @@
-import { BookOpenCheck, FileText, Ruler } from 'lucide-react'
+import { BookOpenCheck, BookOpenText, FileText, Ruler } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
 
 const references = [
+  { to: '/theory', label: 'Teoria e fórmulas', icon: BookOpenText },
   { to: '/formula-sheet', label: 'Formulário oficial', icon: FileText },
   { to: '/units', label: 'Guia de unidades', icon: Ruler },
   { to: '/formulas', label: 'Formulário aplicado', icon: BookOpenCheck },

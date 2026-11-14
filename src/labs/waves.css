@@ -1,0 +1,99 @@
+/* Cenários de ondas eletromagnéticas e ótica (src/labs/waves). Cores só por variáveis CSS,
+   com exceção das cores do arco-íris do espetro visível (ver fim do ficheiro). */
+
+.lab-waves-stage { display: block; width: 100%; height: auto; max-height: 340px; margin-bottom: 8px; overflow: visible; }
+.lab-waves-stage text { font-size: 11px; fill: var(--muted); }
+.lab-waves-stage text.lab-waves-strong { fill: var(--ink); font-weight: 700; }
+
+/* Pontas de seta */
+.lab-waves-head.ray path { fill: var(--ray); }
+.lab-waves-head.e path { fill: var(--vec-e); }
+.lab-waves-head.b path { fill: var(--vec-b); }
+.lab-waves-head.ink path { fill: var(--ink); }
+.lab-waves-head.muted path { fill: var(--muted); }
+
+/* Meios, interfaces e linhas auxiliares */
+.lab-waves-medium { fill: var(--blue); stroke: none; }
+.lab-waves-interface { stroke: var(--ink); stroke-width: 1.5; fill: none; }
+.lab-waves-normal { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 5 4; fill: none; }
+.lab-waves-axis { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 9 3 2 3; }
+.lab-waves-dimension { stroke: var(--ink); stroke-width: 1; fill: none; }
+.lab-waves-tick { stroke: var(--muted); stroke-width: 1; }
+.lab-waves-point { fill: var(--ink); }
+
+/* Raios de luz */
+.lab-waves-ray { stroke: var(--ray); stroke-width: 2.4; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.lab-waves-ray.weak { stroke-width: 1.4; opacity: .5; }
+.lab-waves-ray.leak { stroke-width: 1.5; stroke-dasharray: 4 3; }
+.lab-waves-guide { stroke: var(--amber); stroke-width: 1.5; stroke-dasharray: 6 4; fill: none; }
+.lab-waves-stage text.lab-waves-guide-label { fill: var(--amber); font-weight: 700; }
+
+/* Ângulos */
+.lab-waves-arc { stroke: var(--ink); stroke-width: 1; fill: none; }
+.lab-waves-arc.between { stroke: var(--green); stroke-width: 1.5; }
+.lab-waves-right-angle { stroke: var(--green); stroke-width: 2; fill: color-mix(in srgb, var(--green) 18%, transparent); }
+.lab-waves-stage text.lab-waves-arc-label { fill: var(--ink); font-style: italic; }
+
+/* Polarização (Brewster) */
+.lab-waves-pol-dot { fill: var(--vec-e); stroke: var(--surface); stroke-width: 1; }
+.lab-waves-pol-arrow { stroke: var(--vec-e); stroke-width: 1.6; fill: none; }
+
+/* Fonte isotrópica */
+.lab-waves-front { stroke: var(--ray); stroke-width: 1.2; fill: none; }
+.lab-waves-cone { fill: color-mix(in srgb, var(--amber) 14%, transparent); stroke: var(--amber); stroke-width: 1; stroke-dasharray: 5 4; }
+.lab-waves-patch { stroke: var(--amber); stroke-width: 5; stroke-linecap: round; }
+.lab-waves-glow { fill: color-mix(in srgb, var(--amber) 30%, transparent); }
+.lab-waves-lamp { fill: var(--amber); stroke: var(--ink); stroke-width: 1; }
+.lab-waves-ground { stroke: var(--ink); stroke-width: 2; fill: none; }
+.lab-waves-bar { stroke: var(--line); stroke-width: 1; }
+.lab-waves-bar-stop.low { stop-color: var(--surface-2); }
+.lab-waves-bar-stop.high { stop-color: var(--amber); }
+.lab-waves-bar-marker { fill: var(--ink); stroke: var(--ink); stroke-width: 1.5; stroke-linejoin: round; }
+.lab-waves-bar-marker.ghost { fill: var(--surface); stroke-width: 1; }
+
+/* Espetro */
+.lab-waves-band { stroke: var(--surface); stroke-width: 1; opacity: .55; }
+.lab-waves-band.active { opacity: 1; stroke: var(--ink); stroke-width: 1.5; }
+.lab-waves-band.radio { fill: color-mix(in srgb, var(--blue) 30%, var(--surface)); }
+.lab-waves-band.microwave { fill: color-mix(in srgb, var(--green) 38%, var(--surface)); }
+.lab-waves-band.infrared { fill: color-mix(in srgb, var(--red) 42%, var(--surface)); }
+.lab-waves-band.ultraviolet { fill: color-mix(in srgb, var(--blue) 55%, var(--surface)); }
+.lab-waves-band.xray { fill: color-mix(in srgb, var(--muted) 45%, var(--surface)); }
+.lab-waves-band.gamma { fill: color-mix(in srgb, var(--ink) 55%, var(--surface)); }
+.lab-waves-spectrum-marker { fill: var(--ink); stroke: var(--ink); stroke-width: 1.5; stroke-linejoin: round; }
+.lab-waves-zoom { stroke: var(--line); stroke-width: 1; opacity: .35; }
+.lab-waves-zoom.active { opacity: 1; stroke: var(--ink); }
+.lab-waves-antenna-wave { stroke: var(--vec-e); stroke-width: 2; fill: none; }
+.lab-waves-antenna { stroke: var(--ink); stroke-width: 4; stroke-linecap: round; fill: none; }
+
+/* Onda E/B */
+.lab-waves-axis-line { stroke: var(--muted); stroke-width: 1; }
+.lab-waves-e-curve { stroke: var(--vec-e); stroke-width: 2.4; fill: none; }
+.lab-waves-b-curve { stroke: var(--vec-b); stroke-width: 2.4; fill: none; }
+.lab-waves-e-vectors line { stroke: var(--vec-e); stroke-width: 1.2; }
+.lab-waves-b-vectors line { stroke: var(--vec-b); stroke-width: 1.2; }
+.lab-waves-stage text.lab-waves-e-label { fill: var(--vec-e); font-weight: 700; }
+.lab-waves-stage text.lab-waves-b-label { fill: var(--vec-b); font-weight: 700; }
+.lab-waves-equations { margin: 0 0 14px; padding: 10px 12px; border-left: 2px solid var(--vec-e); background: var(--surface-2); min-width: 0; }
+.lab-waves-equations p { margin: 0; font: 400 14px/1.7 Georgia, serif; color: var(--ink); overflow-wrap: anywhere; }
+
+/* Fibra ótica */
+.lab-waves-core { fill: color-mix(in srgb, var(--blue) 14%, var(--surface)); stroke: var(--blue); stroke-width: 1; }
+.lab-waves-cladding { fill: color-mix(in srgb, var(--blue) 38%, var(--surface)); stroke: var(--blue); stroke-width: 1; }
+.lab-waves-acceptance { fill: color-mix(in srgb, var(--amber) 16%, transparent); stroke: var(--amber); stroke-width: 1; stroke-dasharray: 5 4; }
+.lab-waves-subhead { margin: 22px 0 8px; color: var(--muted); font-size: 9px; font-weight: 750; text-transform: uppercase; letter-spacing: .08em; }
+
+/* Exemplos: deixa os botões passar para a linha seguinte */
+.lab-waves-presets .source-kind { align-items: flex-start; gap: 10px; }
+.lab-waves-presets .source-kind > div { flex-wrap: wrap; justify-content: flex-end; row-gap: 4px; }
+
+/* Arco-íris do visível: única exceção autorizada à regra «só variáveis». */
+.lab-waves-rainbow.red-deep { stop-color: #7a0000; }
+.lab-waves-rainbow.red { stop-color: #ff1a1a; }
+.lab-waves-rainbow.orange { stop-color: #ff8c00; }
+.lab-waves-rainbow.yellow { stop-color: #ffe600; }
+.lab-waves-rainbow.green { stop-color: #1fc24a; }
+.lab-waves-rainbow.cyan { stop-color: #00c8d8; }
+.lab-waves-rainbow.blue { stop-color: #1f5cff; }
+.lab-waves-rainbow.violet { stop-color: #7a2bd8; }
+.lab-waves-rainbow.violet-deep { stop-color: #3a0a6e; }

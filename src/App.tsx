@@ -8,7 +8,8 @@ import { useProgress } from './storage/ProgressContext'
 const AnalysisPage = lazy(() => import('./pages/AnalysisPage').then((module) => ({ default: module.AnalysisPage })))
 const DashboardPage = lazy(() => import('./pages/DashboardPage').then((module) => ({ default: module.DashboardPage })))
 const DiagnosticPage = lazy(() => import('./pages/DiagnosticPage').then((module) => ({ default: module.DiagnosticPage })))
-const ExamExercisesPage = lazy(() => import('./pages/ExamExercisesPage').then((module) => ({ default: module.ExamExercisesPage })))
+const ExercisesPage = lazy(() => import('./pages/ExercisesPage').then((module) => ({ default: module.ExercisesPage })))
+const ExerciseDetailPage = lazy(() => import('./pages/ExerciseDetailPage').then((module) => ({ default: module.ExerciseDetailPage })))
 const MistakesPage = lazy(() => import('./pages/MistakesPage').then((module) => ({ default: module.MistakesPage })))
 const MockExamPage = lazy(() => import('./pages/MockExamPage').then((module) => ({ default: module.MockExamPage })))
 const PracticePage = lazy(() => import('./pages/PracticePage').then((module) => ({ default: module.PracticePage })))
@@ -18,22 +19,26 @@ const OfficialFormulaPage = lazy(() => import('./pages/OfficialFormulaPage').the
 const UnitsPage = lazy(() => import('./pages/UnitsPage').then((module) => ({ default: module.UnitsPage })))
 const StudyPlanPage = lazy(() => import('./pages/StudyPlanPage').then((module) => ({ default: module.StudyPlanPage })))
 const StudyPage = lazy(() => import('./pages/StudyPage').then((module) => ({ default: module.StudyPage })))
+const TheoryPage = lazy(() => import('./pages/TheoryPage').then((module) => ({ default: module.TheoryPage })))
 
 export default function App() {
   const { loading, user } = useAuth()
   const { ready } = useProgress()
 
-  if (loading || (user && !ready)) return <div className="app-loading"><div className="brand"><span>FSIAP</span><small>PREP</small></div><p>A preparar o teu espaço…</p></div>
+  if (loading || (user && !ready)) return <div className="app-loading" role="status"><div className="brand"><span>FSIAP</span><small>PREP</small></div><p>A preparar o teu espaço…</p></div>
   if (!user) return <AuthPage />
 
   return (
     <Layout>
-      <Suspense fallback={<div className="route-loading">A preparar o próximo passo…</div>}>
+      <Suspense fallback={<div className="route-loading" role="status">A preparar o próximo passo…</div>}>
         <Routes>
           <Route path="/" element={<DashboardPage />} />
+          <Route path="/exercises" element={<ExercisesPage />} />
+          <Route path="/exercises/:id" element={<ExerciseDetailPage />} />
+          <Route path="/exam-exercises" element={<Navigate to="/exercises?c=exams" replace />} />
+          <Route path="/theory" element={<TheoryPage />} />
           <Route path="/analysis" element={<AnalysisPage />} />
           <Route path="/diagnostic" element={<DiagnosticPage />} />
-          <Route path="/exam-exercises" element={<ExamExercisesPage />} />
           <Route path="/study" element={<StudyPage />} />
           <Route path="/practice" element={<PracticePage />} />
           <Route path="/simulators" element={<SimulatorsPage />} />

@@ -5,6 +5,7 @@ import App from './App'
 import { AuthProvider } from './auth/AuthContext'
 import { ProgressProvider } from './storage/ProgressContext'
 import './styles.css'
+import './styles/study.css'
 
 const basename = import.meta.env.BASE_URL.replace(/\/$/, '') || '/'
 

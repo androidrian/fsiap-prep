@@ -1,0 +1,85 @@
+/* Laboratório — grupo electro (eletrostática e campo uniforme). Cores só por variáveis CSS. */
+
+.lab-electro-stage { display: block; width: 100%; height: auto; overflow: visible; }
+.lab-electro-stage text { font-size: 11px; fill: var(--muted); user-select: none; }
+.lab-electro-map { cursor: crosshair; touch-action: none; }
+
+/* Plano com eixos */
+.lab-electro-plot { fill: var(--surface); stroke: var(--line); stroke-width: 1; }
+.lab-electro-grid { stroke: var(--line); stroke-width: .6; opacity: .7; }
+.lab-electro-axis { stroke: var(--muted); stroke-width: 1; }
+.lab-electro-stage .lab-electro-tick { fill: var(--muted); }
+.lab-electro-guide { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 4 4; fill: none; opacity: .75; }
+.lab-electro-path { stroke: var(--green); opacity: 1; }
+.lab-electro-point { fill: var(--ink); }
+.lab-electro-probe { fill: var(--surface); stroke: var(--ink); stroke-width: 2; }
+
+/* Cargas, placas e corpos */
+.lab-electro-charge, .lab-electro-bob { stroke: var(--surface); stroke-width: 1.5; }
+.lab-electro-charge.positive, .lab-electro-bob.positive, .lab-electro-sheet.positive { fill: var(--positive); }
+.lab-electro-charge.negative, .lab-electro-sheet.negative { fill: var(--negative); }
+.lab-electro-charge.neutral, .lab-electro-bob.neutral, .lab-electro-sheet.neutral { fill: var(--muted); }
+.lab-electro-stage .lab-electro-sign { fill: var(--surface); font-weight: 800; pointer-events: none; }
+.lab-electro-ghost { fill: none; stroke: var(--muted); stroke-width: 1.5; stroke-dasharray: 3 2; }
+.lab-electro-ceiling { stroke: var(--ink); stroke-width: 2.5; }
+.lab-electro-hatch { stroke: var(--muted); stroke-width: 1; fill: none; }
+.lab-electro-string { stroke: var(--ink); stroke-width: 1.5; }
+.lab-electro-angle { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 3 3; }
+.lab-electro-dimension { fill: none; stroke: var(--muted); stroke-width: 1; }
+.lab-electro-trajectory { fill: none; stroke: var(--vec-v); stroke-width: 2.2; stroke-dasharray: 6 4; }
+
+/* Vetores: cor por grandeza */
+.lab-electro-arrow { fill: none; stroke-width: 1.6; }
+.lab-electro-arrow.lab-electro-thick { stroke-width: 4; }
+.lab-electro-arrow-e { stroke: var(--vec-e); }
+.lab-electro-arrow-f { stroke: var(--vec-f); }
+.lab-electro-arrow-v { stroke: var(--vec-v); }
+.lab-electro-arrow-pos { stroke: var(--positive); }
+.lab-electro-arrow-neg { stroke: var(--negative); }
+.lab-electro-arrow-ink { stroke: var(--ink); }
+.lab-electro-head-e { fill: var(--vec-e); }
+.lab-electro-head-f { fill: var(--vec-f); }
+.lab-electro-head-v { fill: var(--vec-v); }
+.lab-electro-head-pos { fill: var(--positive); }
+.lab-electro-head-neg { fill: var(--negative); }
+.lab-electro-head-ink { fill: var(--ink); }
+.lab-electro-arrow.lab-electro-force { stroke-width: 2.6; }
+.lab-electro-arrow.lab-electro-fieldline { stroke-width: 1.1; opacity: .6; }
+.lab-electro-arrow.lab-electro-weight, .lab-electro-arrow.lab-electro-tension { stroke-width: 2; }
+
+/* Etiquetas: contorno da cor do fundo para se lerem por cima de linhas e setas */
+.lab-electro-stage .lab-electro-name, .lab-electro-stage .lab-electro-label { paint-order: stroke; stroke: var(--paper); stroke-width: 3px; stroke-linejoin: round; }
+.lab-electro-map .lab-electro-name, .lab-electro-map .lab-electro-label { stroke: var(--surface); }
+.lab-electro-stage .lab-electro-name { fill: var(--ink); font-weight: 650; }
+.lab-electro-stage .lab-electro-label { font-weight: 800; }
+.lab-electro-stage .lab-electro-label.positive { fill: var(--positive); }
+.lab-electro-stage .lab-electro-label.negative { fill: var(--negative); }
+.lab-electro-stage .lab-electro-label.field { fill: var(--vec-e); }
+.lab-electro-stage .lab-electro-label.force { fill: var(--vec-f); }
+.lab-electro-stage .lab-electro-label.velocity { fill: var(--vec-v); }
+.lab-electro-stage .lab-electro-label.ink { fill: var(--ink); }
+.lab-electro-stage .lab-electro-zero { fill: var(--muted); }
+
+/* Barra de energia */
+.lab-electro-energy-potential { fill: color-mix(in srgb, var(--vec-e) 30%, transparent); }
+.lab-electro-energy-kinetic { fill: var(--vec-v); }
+.lab-electro-energy-frame { fill: none; stroke: var(--ink); stroke-width: 1; }
+
+/* Texto e controlos fora do SVG */
+.lab-electro-caption { margin: 6px 0 14px; color: var(--muted); font-size: 11px; line-height: 1.45; }
+.lab-electro-readout { margin: 0 0 12px; color: var(--muted); font-size: 12px; line-height: 1.5; overflow-wrap: anywhere; }
+.lab-electro-readout strong { color: var(--ink); }
+.lab-electro-terms { width: 100%; margin: 0 0 14px; border-collapse: collapse; font-size: 12px; }
+.lab-electro-terms th, .lab-electro-terms td { padding: 6px 8px; border-bottom: 1px solid var(--line); text-align: right; font-variant-numeric: tabular-nums; }
+.lab-electro-terms th:first-child { text-align: left; }
+.lab-electro-terms thead th { color: var(--muted); font-size: 11px; font-weight: 600; }
+.lab-electro-terms tbody th { color: var(--ink); font-weight: 700; }
+.lab-electro-terms .lab-electro-sum th, .lab-electro-terms .lab-electro-sum td { color: var(--ink); font-weight: 700; background: color-mix(in srgb, var(--vec-e) 10%, transparent); }
+.lab-electro-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px 16px; margin-top: 22px; }
+.lab-electro-reset { margin-top: 18px; padding: 8px 12px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-size: 12px; cursor: pointer; }
+.lab-electro-reset:hover { border-color: var(--ink); }
+
+@media (max-width: 680px) {
+  .lab-electro-terms { font-size: 11px; }
+  .lab-electro-terms th, .lab-electro-terms td { padding: 5px 4px; }
+}

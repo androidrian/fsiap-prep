@@ -6,7 +6,9 @@ import { currentConfidence } from '../domain/mastery/mastery'
 import { daysUntilExam } from '../domain/study/examDate'
 import { rankFamilies, recommendNext } from '../domain/study/studyEngine'
 import { useProgress } from '../storage/ProgressContext'
+import { SheetProgress } from '../components/SheetProgress'
 import { StatusDot } from '../components/StatusDot'
+import { labScenarioCount } from '../labs/registry'
 
 export function DashboardPage() {
   const { state, dispatch } = useProgress()
@@ -20,7 +22,7 @@ export function DashboardPage() {
     <div className="page dashboard-page">
       <section className="page-heading dashboard-heading">
         <div>
-          <p className="eyebrow">Plano adaptativo · {daysUntilExam(state.settings.examDate)} dias até ao exame</p>
+          <p className="eyebrow">Plano adaptativo · {daysUntilExam(state.settings.examDate) > 0 ? `${daysUntilExam(state.settings.examDate)} dias até ao exame` : 'define a data do exame no fim desta página'}</p>
           <h1>O que aumenta mais<br />a tua nota agora?</h1>
         </div>
         <StatusDot status={coverage.status} />
@@ -32,6 +34,8 @@ export function DashboardPage() {
           <Link className="button button-dark" to="/diagnostic">Fazer diagnóstico <ArrowRight size={17} /></Link>
         </section>
       )}
+
+      <SheetProgress />
 
       <section className="scoreboard enter-up delay-1">
         <div className="coverage-figure">
@@ -91,7 +95,7 @@ export function DashboardPage() {
 
       <section className="toolbelt">
         <Link to="/practice"><Dices size={18} /><span><strong>Banco de prática</strong>30 tipos com variantes ilimitadas</span><ArrowRight size={15} /></Link>
-        <Link to="/simulators"><FlaskConical size={18} /><span><strong>Laboratórios</strong>29 cenários interativos</span><ArrowRight size={15} /></Link>
+        <Link to="/simulators"><FlaskConical size={18} /><span><strong>Laboratórios</strong>{labScenarioCount} cenários interativos</span><ArrowRight size={15} /></Link>
         <Link to="/formula-sheet"><FileText size={18} /><span><strong>Formulário oficial</strong>PDF e transcrição navegável</span><ArrowRight size={15} /></Link>
         <Link to="/study-plan"><CalendarRange size={18} /><span><strong>Plano de 7 dias</strong>Prioridades adaptadas ao domínio</span><ArrowRight size={15} /></Link>
       </section>

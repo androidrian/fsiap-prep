@@ -9,7 +9,7 @@ const renderSimulators = (entry = '/simulators') => render(<MemoryRouter initial
 
 describe('interactive simulator diagrams', () => {
   it('opens the laboratory immediately and exposes layered heat transfer', () => {
-    renderSimulators()
+    renderSimulators('/simulators?family=thermal_transport&scenario=layers')
     expect(screen.queryByRole('button', { name: /abrir laboratório/i })).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Parede composta' })).toBeInTheDocument()
     expect(screen.getByText(/T interface=/)).toBeInTheDocument()
@@ -31,7 +31,7 @@ describe('interactive simulator diagrams', () => {
   it('switches among the main assessed scenarios without invalid results', () => {
     const { container } = renderSimulators()
     fireEvent.click(screen.getByRole('button', { name: /03 Eletrostática/ }))
-    expect(screen.getByRole('button', { name: 'Componentes que anulam' })).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Componentes que anulam' }))
     expect(container.textContent).toContain('Ex₁ + Ex₂ = 0')
 
     fireEvent.click(screen.getByRole('button', { name: /05 Circuitos DC/ }))
