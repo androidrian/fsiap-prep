@@ -7,3 +7,10 @@ tmp/
 .env.*
 !.env.example
 
+
+# Material das aulas (PDFs pesados; as figuras usadas estão em public/figures)
+docs-class/
+
+# Ficheiros temporários das ferramentas de browser
+.playwright-mcp/
+.remember/

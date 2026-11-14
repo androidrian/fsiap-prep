@@ -5,11 +5,12 @@ import { loadProgress, saveProgress } from '../auth/api'
 import { families } from '../data/analysis'
 import { diagnosticMastery, updateMastery } from '../domain/mastery/mastery'
 import { DEFAULT_EXAM_DATE } from '../domain/study/examDate'
-import type { Attempt, Confidence, ErrorType, FamilyId, FamilyProgress, MockResult, ProgressState, Settings } from '../domain/types'
+import type { Attempt, Confidence, ErrorType, ExerciseStudy, FamilyId, FamilyProgress, MockResult, ProgressState, Settings, StudyStatus } from '../domain/types'
 
 const emptyProgress = (): FamilyProgress => ({ mastery: 0, updatedAt: null, independentSuccesses: 0, hintedSuccesses: 0, failures: 0, nextReviewAt: null })
 
 export const initialState: ProgressState = {
+  study: {},
   diagnosed: false,
   mastery: Object.fromEntries(families.map((family) => [family.id, emptyProgress()])) as Record<FamilyId, FamilyProgress>,
   attempts: [],
@@ -30,11 +31,29 @@ type Action =
   | { type: 'mock'; result: Omit<MockResult, 'id' | 'completedAt'> }
   | { type: 'settings'; settings: Partial<Settings> }
   | { type: 'resolve-mistake'; id: string }
+  | { type: 'study-status'; exerciseId: string; status: StudyStatus }
+  | { type: 'study-note'; exerciseId: string; note: string }
+  | { type: 'study-check'; exerciseId: string; part: string }
   | { type: 'reset' }
+
+function studyEntry(state: ProgressState, exerciseId: string): ExerciseStudy {
+  return state.study[exerciseId] ?? { status: 'todo', updatedAt: new Date().toISOString() }
+}
 
 function reducer(state: ProgressState, action: Action): ProgressState {
   if (action.type === 'hydrate') return action.state
   if (action.type === 'reset') return initialState
+  if (action.type === 'study-status') {
+    return { ...state, study: { ...state.study, [action.exerciseId]: { ...studyEntry(state, action.exerciseId), status: action.status, updatedAt: new Date().toISOString() } } }
+  }
+  if (action.type === 'study-note') {
+    return { ...state, study: { ...state.study, [action.exerciseId]: { ...studyEntry(state, action.exerciseId), note: action.note.slice(0, 2000), updatedAt: new Date().toISOString() } } }
+  }
+  if (action.type === 'study-check') {
+    const entry = studyEntry(state, action.exerciseId)
+    const checked = Array.from(new Set([...(entry.checked ?? []), action.part]))
+    return { ...state, study: { ...state.study, [action.exerciseId]: { ...entry, checked, updatedAt: new Date().toISOString() } } }
+  }
   if (action.type === 'settings') return { ...state, settings: { ...state.settings, ...action.settings } }
   if (action.type === 'diagnostic') {
     const now = new Date().toISOString()
@@ -76,6 +95,7 @@ function normalizeState(parsed: Partial<ProgressState>): ProgressState {
     ...initialState,
     ...parsed,
     settings,
+    study: parsed.study ?? {},
     mastery: { ...initialState.mastery, ...parsed.mastery },
   }
 }

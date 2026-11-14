@@ -102,7 +102,7 @@ export function StudyPage() {
           <h1>{correct ? 'Boa transferência para uma variante nova.' : 'Revê o passo que separa os dados da fórmula.'}</h1>
           <p>{exercise.explanation}</p>
           <div className="source-note"><BookOpen size={16} /> {exercise.source}</div>
-          <div className="result-actions"><button className="button button-primary" onClick={nextVariant}><RotateCcw size={16} /> Gerar nova variante</button><Link className="button button-dark" to="/practice">Mudar de família <ArrowRight size={16} /></Link></div>
+          <div className="result-actions"><button className="button button-primary" onClick={nextVariant}><RotateCcw size={16} /> Gerar nova variante</button><Link className="button button-dark" to="/practice">Mudar de família <ArrowRight size={16} /></Link><Link className="button button-quiet" to={`/exercises?family=${familyId}`}>Ver exercícios resolvidos desta família <ArrowRight size={16} /></Link></div>
         </section>
       )}
     </div>

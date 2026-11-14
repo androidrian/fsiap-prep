@@ -119,7 +119,21 @@ export interface Settings {
   dailyMinutes: number
 }
 
+/** Estado de estudo de um exercício resolvido (fichas e exames). */
+export type StudyStatus = 'todo' | 'done' | 'review' | 'doubt'
+
+export interface ExerciseStudy {
+  status: StudyStatus
+  updatedAt: string
+  /** Notas pessoais do aluno sobre o exercício. */
+  note?: string
+  /** Alíneas cuja resposta numérica o aluno já acertou na verificação. */
+  checked?: string[]
+}
+
 export interface ProgressState {
+  /** Progresso por exercício resolvido, indexado pelo id do exercício. */
+  study: Record<string, ExerciseStudy>
   diagnosed: boolean
   mastery: Record<FamilyId, FamilyProgress>
   attempts: Attempt[]

@@ -1,10 +1,10 @@
-import { ArrowRight, Atom, Eye, EyeOff, ShieldCheck } from 'lucide-react'
+import { ArrowRight, Atom, Eye, EyeOff, HardDrive, ShieldCheck, WifiOff } from 'lucide-react'
 import { useState, type FormEvent } from 'react'
 import { useAuth } from '../auth/AuthContext'
 import { ApiError } from '../auth/api'
 
 export function AuthPage() {
-  const { login, register } = useAuth()
+  const { login, register, continueLocally, serverAvailable } = useAuth()
   const [mode, setMode] = useState<'login' | 'register'>('login')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -19,7 +19,7 @@ export function AuthPage() {
     try {
       await (mode === 'login' ? login(username, password) : register(username, password))
     } catch (caught) {
-      setError(caught instanceof ApiError ? caught.message : 'Não foi possível contactar o servidor.')
+      setError(caught instanceof ApiError && caught.status < 500 ? caught.message : 'O servidor de contas não respondeu. Podes estudar neste computador sem conta.')
     } finally {
       setBusy(false)
     }
@@ -35,14 +35,23 @@ export function AuthPage() {
     <main className="auth-page">
       <section className="auth-surface enter-up">
         <div className="auth-brand"><Atom size={27} /><span>FSIAP</span><small>PREP</small></div>
-        <p className="eyebrow">Progresso pessoal e sincronizado</p>
+        <p className="eyebrow">Fichas resolvidas · laboratório · teoria</p>
         <h1>{mode === 'login' ? 'Continua exatamente onde paraste.' : 'Um plano que começa contigo.'}</h1>
-        <p className="auth-lede">Cada pessoa tem o seu diagnóstico, domínio, simulados e caderno de erros.</p>
+        <p className="auth-lede">Entra com a tua conta para sincronizar o progresso, ou estuda já neste computador sem conta.</p>
+
+        {!serverAvailable && <p className="auth-offline" role="status"><WifiOff size={16} /> O servidor de contas não está a responder. O modo local funciona na mesma.</p>}
+
+        <button type="button" className="button button-dark auth-local" onClick={() => continueLocally()}>
+          <HardDrive size={17} /> Estudar neste computador <ArrowRight size={17} />
+        </button>
+        <p className="auth-local-note">Sem conta nem password. O progresso fica guardado neste browser.</p>
+
+        <div className="auth-divider"><span>ou com conta</span></div>
 
         <form className="auth-form" onSubmit={submit}>
           <label>
             <span>Username</span>
-            <input autoFocus autoComplete="username" autoCapitalize="none" minLength={3} maxLength={32} required value={username} onChange={(event) => setUsername(event.target.value)} />
+            <input autoComplete="username" autoCapitalize="none" minLength={3} maxLength={32} required value={username} onChange={(event) => setUsername(event.target.value)} />
           </label>
           <label>
             <span>Password</span>
@@ -56,7 +65,7 @@ export function AuthPage() {
         </form>
 
         <button className="auth-switch" type="button" onClick={switchMode}>{mode === 'login' ? 'Ainda não tens conta? Criar conta' : 'Já tens conta? Entrar'}</button>
-        <div className="auth-security"><ShieldCheck size={16} /><span>{mode === 'register' ? 'Sem email: guarda a password, porque não existe recuperação automática.' : 'A sessão e o progresso ficam protegidos no servidor.'}</span></div>
+        <div className="auth-security"><ShieldCheck size={16} /><span>{mode === 'register' ? 'Sem email: guarda a password, porque não existe recuperação automática.' : 'Com conta, a sessão e o progresso ficam protegidos no servidor.'}</span></div>
       </section>
     </main>
   )

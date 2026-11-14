@@ -1,0 +1,123 @@
+/* Cenários de circuitos DC e RC. Cores só por variáveis (modo escuro). */
+
+/* ── Palco SVG ─────────────────────────────────────────────────────────── */
+.lab-circuits-stage { display: block; width: 100%; height: auto; margin-bottom: 16px; overflow: visible; }
+.lab-circuits-stage text { font-size: 11px; fill: var(--muted); }
+.lab-circuits-stage .lab-circuits-header { font-size: 12px; fill: var(--ink); font-weight: 650; }
+.lab-circuits-stage .lab-circuits-flow { fill: var(--blue); font-weight: 700; }
+.lab-circuits-stage .lab-circuits-warn { fill: var(--red); font-weight: 700; }
+.lab-circuits-stage .lab-circuits-polarity { fill: var(--positive); font-size: 14px; font-weight: 700; }
+.lab-circuits-stage .lab-circuits-node-label,
+.lab-circuits-stage .lab-circuits-terminal-label { fill: var(--ink); font-size: 13px; font-weight: 700; }
+
+.lab-circuits-wire { fill: none; stroke: var(--ink); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.lab-circuits-lead { fill: none; stroke: var(--ink); stroke-width: 2; stroke-linecap: round; }
+.lab-circuits-box { fill: color-mix(in srgb, var(--blue) 12%, var(--surface)); stroke: var(--blue); stroke-width: 2; }
+.lab-circuits-plates { fill: none; stroke: var(--blue); stroke-width: 3; stroke-linecap: round; }
+.lab-circuits-zigzag { fill: none; stroke: var(--blue); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.lab-circuits-node { fill: var(--ink); }
+.lab-circuits-node-halo { fill: color-mix(in srgb, var(--amber) 28%, transparent); stroke: var(--amber); stroke-width: 1; }
+.lab-circuits-terminal { fill: var(--surface); stroke: var(--ink); stroke-width: 2; }
+.lab-circuits-arrowhead { fill: var(--blue); }
+.lab-circuits-plate-long { stroke: var(--ink); stroke-width: 2; }
+.lab-circuits-plate-short { stroke: var(--ink); stroke-width: 5; }
+.lab-circuits-switch { stroke: var(--amber); stroke-width: 3; stroke-linecap: round; transition: all .2s ease; }
+.lab-circuits-current { stroke: var(--blue); stroke-width: 2.5; stroke-linecap: round; }
+.lab-circuits-current-head { fill: var(--blue); }
+.lab-circuits-branch.is-open .lab-circuits-zigzag,
+.lab-circuits-branch.is-open .lab-circuits-wire,
+.lab-circuits-branch.is-open .lab-circuits-plate-long,
+.lab-circuits-branch.is-open .lab-circuits-plate-short { opacity: .4; }
+.lab-circuits-idle { opacity: .32; }
+
+/* ── Gráficos ──────────────────────────────────────────────────────────── */
+.lab-circuits-axis { fill: none; stroke: var(--muted); stroke-width: 1; }
+.lab-circuits-guide { fill: none; stroke: var(--muted); stroke-width: 1; stroke-dasharray: 4 4; opacity: .7; }
+.lab-circuits-guide-point { stroke: var(--red); opacity: 1; }
+.lab-circuits-curve { fill: none; stroke: var(--blue); stroke-width: 2.5; stroke-linejoin: round; }
+.lab-circuits-curve-current { stroke: var(--amber); }
+.lab-circuits-marker { fill: var(--surface); stroke: var(--red); stroke-width: 3; transition: cx .15s ease, cy .15s ease; }
+.lab-circuits-tick { fill: var(--ink); }
+.rc-chart text { font-size: 11px; fill: var(--muted); }
+
+/* ── Fonte real ────────────────────────────────────────────────────────── */
+.lab-circuits-enclosure { fill: color-mix(in srgb, var(--amber) 7%, transparent); stroke: var(--muted); stroke-width: 1; stroke-dasharray: 5 4; }
+.lab-circuits-box-loss { fill: color-mix(in srgb, var(--red) 16%, var(--surface)); stroke: var(--red); }
+.lab-circuits-box-load { fill: var(--green); stroke: var(--green); transition: fill-opacity .2s ease; }
+.lab-circuits-share-load { fill: var(--green); }
+.lab-circuits-share-loss { fill: var(--red); }
+
+/* ── Voltímetro ────────────────────────────────────────────────────────── */
+.lab-circuits-split { transition: stroke-width .2s ease; }
+.lab-circuits-split.is-idle { stroke-dasharray: 3 4; }
+.lab-circuits-dial { fill: var(--surface); stroke: var(--ink); stroke-width: 2; }
+.lab-circuits-dial-scale { fill: none; stroke: var(--muted); stroke-width: 1; }
+.lab-circuits-needle { stroke: var(--red); stroke-width: 2.5; stroke-linecap: round; }
+.lab-circuits-needle-true { stroke: var(--green); stroke-width: 1.5; stroke-dasharray: 3 3; }
+.lab-circuits-stage .lab-circuits-dial-label { fill: var(--ink); font-weight: 700; }
+
+/* ── Fio condutor ──────────────────────────────────────────────────────── */
+.lab-circuits-copper { stroke: var(--ink); stroke-width: 1.5; fill-opacity: .55; transition: fill .2s ease; }
+.lab-circuits-electrons { animation: lab-circuits-drift linear infinite; }
+.lab-circuits-electrons circle { fill: var(--negative); }
+.lab-circuits-drift { stroke: var(--vec-v); stroke-width: 2.5; stroke-linecap: round; }
+.lab-circuits-drift-head { fill: var(--vec-v); }
+.lab-circuits-stage .lab-circuits-drift-label { fill: var(--vec-v); font-weight: 700; }
+@keyframes lab-circuits-drift { from { transform: translateX(0); } to { transform: translateX(-24px); } }
+@media (prefers-reduced-motion: reduce) { .lab-circuits-electrons { animation: none; } }
+
+/* ── Comutador RC ──────────────────────────────────────────────────────── */
+.lab-circuits-cap-plate { stroke: var(--blue); stroke-linecap: round; transition: stroke-width .15s ease; }
+.lab-circuits-stage .lab-circuits-charge-plus { fill: var(--positive); font-weight: 700; }
+.lab-circuits-stage .lab-circuits-charge-minus { fill: var(--negative); font-weight: 700; }
+.lab-circuits-toggle { cursor: pointer; }
+.lab-circuits-hit { fill: transparent; }
+.lab-circuits-toggle:hover .lab-circuits-hit { fill: color-mix(in srgb, var(--amber) 14%, transparent); }
+
+/* ── Condensador plano ─────────────────────────────────────────────────── */
+.lab-circuits-dielectric { stroke: none; transition: all .2s ease; }
+.lab-circuits-plate-positive { fill: var(--positive); transition: all .2s ease; }
+.lab-circuits-plate-negative { fill: var(--negative); transition: all .2s ease; }
+.lab-circuits-field-line { fill: none; stroke: var(--vec-e); stroke-width: 1.5; }
+.lab-circuits-field-head { fill: var(--vec-e); }
+.lab-circuits-stage .lab-circuits-field-label { fill: var(--vec-e); font-weight: 700; }
+.lab-circuits-force { stroke: var(--vec-f); stroke-width: 3; stroke-linecap: round; }
+.lab-circuits-force-head { fill: var(--vec-f); }
+.lab-circuits-stage .lab-circuits-force-label { fill: var(--vec-f); font-weight: 700; }
+.lab-circuits-electron { fill: var(--negative); stroke: var(--surface); stroke-width: 1.5; }
+
+/* ── Controlos e painéis ───────────────────────────────────────────────── */
+.lab-circuits-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 0 22px; }
+.lab-circuits-expr { display: block; margin-top: 24px; }
+.lab-circuits-expr > span { display: block; font-size: 11px; color: var(--muted); }
+.lab-circuits-expr input { width: 100%; margin-top: 8px; padding: 9px 10px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font: 13px/1.3 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.lab-circuits-expr input[aria-invalid='true'] { border-color: var(--red); }
+.lab-circuits-expr small { display: block; margin-top: 6px; font-size: 10px; line-height: 1.45; color: var(--muted); }
+.lab-circuits-expr .lab-circuits-expr-error { color: var(--red); }
+
+.lab-circuits-panel { margin-top: 24px; }
+.lab-circuits-panel h3 { margin: 16px 0 8px; font-size: 10px; font-weight: 750; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.lab-circuits-panel h3:first-child { margin-top: 0; }
+.lab-circuits-panel p { margin: 0; font-size: 12px; color: var(--ink); }
+.lab-circuits-steps { margin: 0; padding-left: 22px; list-style: decimal; }
+.lab-circuits-steps li { margin: 7px 0; font-size: 12px; color: var(--muted); }
+.lab-circuits-steps li span { display: block; color: var(--ink); font-family: Georgia, serif; font-size: 14px; }
+.lab-circuits-steps li small { display: block; font-size: 10px; }
+.lab-circuits-equations { margin: 0; padding: 0; list-style: none; }
+.lab-circuits-equation,
+.lab-circuits-equations li { margin: 5px 0; font-family: Georgia, serif; font-size: 13px; color: var(--ink); overflow-wrap: anywhere; }
+.lab-circuits-table-wrap { overflow-x: auto; }
+.lab-circuits-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.lab-circuits-table th,
+.lab-circuits-table td { padding: 7px 8px; border-bottom: 1px solid var(--line); text-align: right; white-space: nowrap; }
+.lab-circuits-table th:first-child { text-align: left; }
+.lab-circuits-table thead th { font-size: 9px; font-weight: 750; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.lab-circuits-table tbody th { font-weight: 650; color: var(--ink); }
+.lab-circuits-table tfoot th,
+.lab-circuits-table tfoot td { border-top: 1px solid var(--ink); border-bottom: 0; font-weight: 700; }
+.lab-circuits-table .is-highlight td,
+.lab-circuits-table .is-highlight th { background: color-mix(in srgb, var(--green) 12%, transparent); }
+
+@media (max-width: 680px) {
+  .lab-circuits-pair { grid-template-columns: 1fr; }
+}

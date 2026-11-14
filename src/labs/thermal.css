@@ -1,0 +1,117 @@
+/* Cenários térmicos do laboratório. Cores só por variáveis CSS (modo escuro). */
+
+.lab-thermal-stage { display: block; width: 100%; height: auto; margin-bottom: 14px; overflow: visible; }
+.lab-thermal-stage text { font-size: 11px; fill: var(--muted); }
+.lab-thermal-stage .lab-thermal-name { fill: var(--ink); font-weight: 700; }
+.lab-thermal-stage .lab-thermal-value { fill: var(--ink); font-weight: 600; }
+.lab-thermal-stage .lab-thermal-tag.hot { fill: var(--hot); font-weight: 700; }
+.lab-thermal-stage .lab-thermal-tag.cold { fill: var(--cold); font-weight: 700; }
+.lab-thermal-stage .lab-thermal-tag.flow { fill: var(--amber); font-weight: 700; }
+.lab-thermal-guide { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 4 4; fill: none; opacity: .65; }
+.lab-thermal-axis { stroke: var(--muted); stroke-width: 1; fill: none; }
+.lab-thermal-dimension { stroke: var(--ink); stroke-width: 1.5; fill: none; }
+.lab-thermal-head-flow path { fill: var(--amber); }
+.lab-thermal-head-hot path { fill: var(--hot); }
+.lab-thermal-head-cold path { fill: var(--cold); }
+.lab-thermal-head-stream path { fill: var(--cold); }
+
+/* Paredes */
+.lab-thermal-side.hot { fill: var(--hot); }
+.lab-thermal-side.cold { fill: var(--cold); }
+.lab-thermal-layer { fill: color-mix(in srgb, var(--amber) var(--share, 20%), var(--surface)); stroke: var(--ink); stroke-width: 1; transition: fill .2s; }
+.lab-thermal-profile { fill: none; stroke: var(--hot); stroke-width: 2.5; stroke-linejoin: round; }
+.lab-thermal-profile-dot { fill: var(--surface); stroke: var(--hot); stroke-width: 2; }
+.lab-thermal-flow-line { stroke: var(--amber); stroke-width: 2; }
+.lab-thermal-wire { fill: none; stroke: var(--ink); stroke-width: 1.5; }
+.lab-thermal-resistor { fill: none; stroke: var(--blue); stroke-width: 2; stroke-linejoin: round; }
+.lab-thermal-node { fill: var(--ink); }
+.lab-thermal-block { fill: color-mix(in srgb, var(--amber) 14%, var(--surface)); stroke: var(--ink); stroke-width: 1.2; }
+.lab-thermal-block.b { fill: color-mix(in srgb, var(--blue) 12%, var(--surface)); }
+.lab-thermal-block.c { fill: color-mix(in srgb, var(--green) 14%, var(--surface)); }
+.lab-thermal-heat { fill: color-mix(in srgb, var(--hot) 55%, transparent); stroke: var(--hot); stroke-width: 1; stroke-linejoin: round; }
+.lab-thermal-heat.total { fill: color-mix(in srgb, var(--hot) 30%, transparent); }
+
+.lab-thermal-table { width: 100%; margin: 0 0 16px; border-collapse: collapse; font-size: 11px; }
+.lab-thermal-table th { padding: 6px 8px; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 9px; font-weight: 700; letter-spacing: .05em; text-align: right; text-transform: uppercase; }
+.lab-thermal-table td { padding: 6px 8px; border-bottom: 1px solid var(--line); color: var(--ink); text-align: right; font-variant-numeric: tabular-nums; }
+.lab-thermal-table th:first-child, .lab-thermal-table td:first-child { text-align: left; }
+
+/* Radiação */
+.lab-thermal-ray { fill: none; stroke-linecap: round; }
+.lab-thermal-ray.out { stroke: var(--hot); }
+.lab-thermal-ray.in { stroke: var(--cold); }
+.lab-thermal-body { fill: color-mix(in srgb, var(--hot) var(--glow, 30%), var(--surface)); stroke: var(--ink); stroke-width: 1.5; transition: fill .2s; }
+.lab-thermal-visible { fill: color-mix(in srgb, var(--amber) 22%, transparent); }
+.lab-thermal-stage .lab-thermal-visible-label { fill: var(--amber); font-weight: 700; }
+.lab-thermal-spectrum { fill: none; stroke-width: 2.5; stroke-linejoin: round; }
+.lab-thermal-spectrum.body { stroke: var(--hot); }
+.lab-thermal-spectrum.surroundings { stroke: var(--cold); stroke-width: 1.5; stroke-dasharray: 5 4; }
+.lab-thermal-peak { stroke: var(--ink); stroke-width: 1; stroke-dasharray: 3 3; }
+
+/* Convecção */
+.lab-thermal-stream { fill: none; stroke: color-mix(in srgb, var(--cold) 55%, transparent); stroke-width: 1.5; }
+.lab-thermal-plume { fill: none; stroke-width: 2; stroke-linecap: round; }
+.lab-thermal-plume.hot { stroke: var(--hot); }
+.lab-thermal-plume.cold { stroke: var(--cold); }
+.lab-thermal-surface { fill: color-mix(in srgb, var(--hot) var(--warmth, 30%), var(--surface-2)); stroke: var(--ink); stroke-width: 1.2; transition: fill .2s; }
+.lab-thermal-surface.cold { fill: color-mix(in srgb, var(--cold) var(--warmth, 30%), var(--surface-2)); }
+
+/* Curva de aquecimento */
+.lab-thermal-curve { stroke-width: 3.5; stroke-linecap: round; }
+.lab-thermal-curve.ice { stroke: var(--cold); }
+.lab-thermal-curve.fusion { stroke: var(--amber); }
+.lab-thermal-curve.water { stroke: var(--hot); }
+.lab-thermal-bracket { fill: none; stroke-width: 1.5; }
+.lab-thermal-bracket.ice { stroke: var(--cold); }
+.lab-thermal-bracket.fusion { stroke: var(--amber); }
+.lab-thermal-bracket.water { stroke: var(--hot); }
+.lab-thermal-guide.marker { stroke: var(--ink); opacity: .8; }
+.lab-thermal-marker { fill: var(--surface); stroke: var(--ink); stroke-width: 2.5; }
+
+/* Dilatação */
+.lab-thermal-bar.before, .lab-thermal-cube.before { fill: none; stroke: var(--muted); stroke-width: 1.5; stroke-dasharray: 5 4; }
+.lab-thermal-bar.after, .lab-thermal-cube.after { fill: color-mix(in srgb, var(--hot) 18%, var(--surface)); stroke: var(--hot); stroke-width: 1.5; stroke-linejoin: round; }
+.lab-thermal-bar.after.cool, .lab-thermal-cube.after.cool { fill: color-mix(in srgb, var(--cold) 18%, var(--surface)); stroke: var(--cold); }
+.lab-thermal-materials .source-kind { display: block; margin-top: 18px; }
+.lab-thermal-materials .source-kind > div { flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+.lab-thermal-materials .source-kind button + button { border-left: 1px solid var(--line); }
+.lab-thermal-materials .source-kind button.active { border-color: var(--ink); }
+
+/* Termómetros */
+.lab-thermal-tube { fill: var(--surface); stroke: var(--ink); stroke-width: 1.2; }
+.lab-thermal-bulb { fill: color-mix(in srgb, var(--hot) var(--warmth, 100%), var(--cold)); stroke: var(--ink); stroke-width: 1.2; }
+.lab-thermal-mercury { fill: color-mix(in srgb, var(--hot) var(--warmth, 100%), var(--cold)); transition: width .15s, height .2s, y .2s; }
+.lab-thermal-reading { stroke: color-mix(in srgb, var(--hot) var(--warmth, 100%), var(--cold)); stroke-width: 1.5; }
+.lab-thermal-stage .lab-thermal-readout { fill: var(--ink); font-family: Georgia, serif; font-size: 17px; }
+.lab-thermal-steps { display: grid; gap: 8px; margin: 14px 0 4px; color: var(--ink); font-size: 13px; }
+
+/* Experiência de Joule */
+.lab-thermal-support { fill: none; stroke: var(--ink); stroke-width: 3; stroke-linecap: round; }
+.lab-thermal-rope { stroke: var(--muted); stroke-width: 1.5; }
+.lab-thermal-pulley { fill: var(--surface-2); stroke: var(--ink); stroke-width: 2; }
+.lab-thermal-weight { transition: transform .25s ease-out; }
+.lab-thermal-weight.falling { transition: transform .9s ease-in; }
+.lab-thermal-mass { fill: color-mix(in srgb, var(--ink) 55%, var(--surface)); stroke: var(--ink); stroke-width: 1.2; }
+.lab-thermal-spool { fill: var(--surface-2); stroke: var(--ink); stroke-width: 1.5; }
+.lab-thermal-shaft { stroke: var(--ink); stroke-width: 3; }
+.lab-thermal-water { fill: color-mix(in srgb, var(--cold) 20%, transparent); }
+.lab-thermal-vessel { fill: none; stroke: var(--ink); stroke-width: 3; stroke-linejoin: round; }
+.lab-thermal-paddle rect { fill: color-mix(in srgb, var(--amber) 45%, var(--surface)); stroke: var(--ink); stroke-width: 1.2; }
+.lab-thermal-paddle.spinning { animation: lab-thermal-spin .3s linear infinite; }
+.lab-thermal-joule .lab-thermal-mercury { fill: var(--hot); }
+@keyframes lab-thermal-spin { 0% { transform: scaleX(1); } 50% { transform: scaleX(.15); } 100% { transform: scaleX(1); } }
+
+/* Controlos e notas */
+.lab-thermal-actions { margin-top: 18px; }
+.lab-thermal-actions button:disabled { opacity: .4; cursor: default; }
+.lab-thermal-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px 16px; margin-top: 18px; }
+.lab-thermal-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; grid-column: 1 / -1; }
+.lab-thermal-inverse { margin: 16px 0 0; padding: 10px 12px; border-left: 2px solid var(--blue); background: color-mix(in srgb, var(--blue) 8%, transparent); color: var(--muted); font-size: 11px; line-height: 1.5; }
+.lab-thermal-inverse strong { color: var(--ink); }
+
+.lab-thermal-fields .sim-number { min-width: 0; margin-top: 0; }
+
+@media (max-width: 680px) {
+  .lab-thermal-table th, .lab-thermal-table td { padding: 5px 4px; }
+  .lab-thermal-pair { grid-template-columns: 1fr; }
+}

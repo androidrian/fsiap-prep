@@ -1,0 +1,115 @@
+/* Laboratórios de magnetismo e indução. Cores só por variáveis CSS (preparado para modo escuro). */
+
+/* ---------- Palco e texto ---------- */
+.lab-magnetism-stage { display: block; width: 100%; height: auto; aspect-ratio: 2 / 1; margin-bottom: 8px; overflow: visible; }
+:where(.lab-magnetism-stage) text { font-size: 12px; fill: var(--muted); paint-order: stroke fill; stroke: var(--paper); stroke-width: 3px; stroke-linejoin: round; }
+svg text.lab-magnetism-strong { fill: var(--ink); font-weight: 700; }
+svg text.lab-magnetism-label { fill: var(--lab-tone, var(--ink)); font-size: 12px; font-weight: 700; }
+svg.lab-magnetism-wire-stage text, svg.lab-magnetism-legacy text { font-size: 12px; }
+svg.lab-magnetism-wire-stage text:not(.wire-symbol) { paint-order: stroke fill; stroke: var(--paper); stroke-width: 3px; stroke-linejoin: round; }
+.lab-magnetism-caption { margin: 0 0 12px; color: var(--muted); font-size: 11px; line-height: 1.45; }
+
+/* ---------- Tons (cor por grandeza) ---------- */
+.lab-magnetism-tone-v { --lab-tone: var(--vec-v); }
+.lab-magnetism-tone-b { --lab-tone: var(--vec-b); }
+.lab-magnetism-tone-e { --lab-tone: var(--vec-e); }
+.lab-magnetism-tone-f { --lab-tone: var(--vec-f); }
+.lab-magnetism-tone-ink { --lab-tone: var(--ink); }
+.lab-magnetism-tone-muted { --lab-tone: var(--muted); }
+.lab-magnetism-tone-blue { --lab-tone: var(--blue); }
+.lab-magnetism-tone-red { --lab-tone: var(--red); }
+.lab-magnetism-tone-amber { --lab-tone: var(--amber); }
+
+/* ---------- Setas ---------- */
+.lab-magnetism-arrow { fill: none; stroke: var(--lab-tone, var(--ink)); stroke-width: 2.6; stroke-linecap: round; }
+.lab-magnetism-arrow.thin { stroke-width: 1.6; }
+.lab-magnetism-arrow.thick { stroke-width: 3.6; }
+.lab-magnetism-arrow.dashed { stroke-dasharray: 5 4; }
+.lab-magnetism-head { fill: var(--lab-tone, var(--ink)); }
+.lab-magnetism-null { fill: var(--lab-tone, var(--ink)); }
+.lab-magnetism-faint { opacity: .45; }
+
+/* ---------- Região de campo, padrões ⊙/⊗ e escala ---------- */
+.lab-magnetism-region { fill: color-mix(in srgb, var(--vec-b) 6%, transparent); stroke: var(--line); stroke-width: 1; }
+.lab-magnetism-region-fill { stroke: none; pointer-events: none; }
+.lab-magnetism-glyph { fill: none; stroke: color-mix(in srgb, var(--vec-b) 60%, transparent); stroke-width: 1.2; }
+.lab-magnetism-glyph.dot { fill: color-mix(in srgb, var(--vec-b) 60%, transparent); stroke: none; }
+.lab-magnetism-scale path { fill: none; stroke: var(--ink); stroke-width: 1.5; }
+.lab-magnetism-scale text { fill: var(--ink); font-size: 11px; }
+
+/* ---------- Trajetórias, linhas auxiliares e partículas ---------- */
+.lab-magnetism-path { fill: none; stroke: var(--vec-v); stroke-width: 3; stroke-linecap: round; }
+.lab-magnetism-path.thin { stroke-width: 1.8; }
+.lab-magnetism-track { fill: none; stroke: var(--vec-v); stroke-width: 1.5; stroke-dasharray: 4 4; opacity: .6; }
+.lab-magnetism-aux { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+.lab-magnetism-dim { fill: none; stroke: var(--ink); stroke-width: 1.2; }
+.lab-magnetism-plate { fill: none; stroke: var(--ink); stroke-width: 3; stroke-linecap: round; }
+.lab-magnetism-centre { fill: var(--ink); }
+.lab-magnetism-landing { fill: var(--paper); stroke: var(--ink); stroke-width: 2.5; }
+.lab-magnetism-particle { stroke: var(--paper); stroke-width: 1.5; }
+.lab-magnetism-particle.positive { fill: var(--positive); }
+.lab-magnetism-particle.negative { fill: var(--negative); }
+svg text.lab-magnetism-sign { fill: var(--paper); stroke: none; font-size: 12px; font-weight: 800; pointer-events: none; }
+
+/* ---------- Produto vetorial ---------- */
+.lab-magnetism-axis { stroke: var(--muted); stroke-width: 1.4; }
+.lab-magnetism-axis.faint { stroke-dasharray: 3 4; opacity: .55; }
+svg text.lab-magnetism-axis-label { fill: var(--muted); font-size: 12px; font-style: italic; font-weight: 700; }
+.lab-magnetism-proj { fill: none; stroke: var(--lab-tone, var(--muted)); stroke-width: 1; stroke-dasharray: 3 3; opacity: .6; }
+.lab-magnetism-determinant { margin: 10px 0 14px; overflow-x: auto; font-size: 13px; color: var(--ink); }
+.lab-magnetism-determinant .katex-display { margin: 0; }
+
+/* ---------- Seletor de velocidades ---------- */
+.lab-magnetism-plate-positive { fill: var(--positive); }
+.lab-magnetism-plate-negative { fill: var(--negative); }
+svg text.lab-magnetism-plate-sign { font-size: 14px; font-weight: 800; }
+svg text.lab-magnetism-plate-sign.positive { fill: var(--positive); }
+svg text.lab-magnetism-plate-sign.negative { fill: var(--negative); }
+
+/* ---------- Ciclotrão e transformador ---------- */
+.lab-magnetism-dee { fill: var(--surface-2); stroke: var(--ink); stroke-width: 1.8; }
+.lab-magnetism-lead { fill: none; stroke: var(--ink); stroke-width: 1.6; }
+.lab-magnetism-source { fill: var(--surface); stroke: var(--ink); stroke-width: 1.6; }
+.lab-magnetism-core { fill: var(--surface-2); stroke: var(--ink); stroke-width: 1.6; }
+.lab-magnetism-flux { fill: none; stroke: var(--vec-b); stroke-width: 1.6; stroke-dasharray: 6 4; }
+.lab-magnetism-turn { fill: none; stroke-width: 2.4; }
+.lab-magnetism-turn.primary { stroke: var(--blue); }
+.lab-magnetism-turn.secondary { stroke: var(--amber); }
+.lab-magnetism-resistor { fill: var(--surface); stroke: var(--ink); stroke-width: 1.8; }
+
+/* ---------- Fio num campo externo ---------- */
+.lab-magnetism-legend text { font-size: 11px; }
+.lab-magnetism-mark { fill: none; stroke-width: 2; }
+.lab-magnetism-mark.max { stroke: var(--red); }
+.lab-magnetism-mark.min { stroke: var(--ink); stroke-dasharray: 3 3; }
+.lab-magnetism-wire { fill: var(--ink); }
+.lab-magnetism-wire-glyph { fill: none; stroke: var(--paper); stroke-width: 2; }
+.lab-magnetism-wire-glyph.dot { fill: var(--paper); stroke: none; }
+
+/* ---------- Gerador ---------- */
+.lab-magnetism-pole.north { fill: var(--red); }
+.lab-magnetism-pole.south { fill: var(--blue); }
+svg text.lab-magnetism-pole-label { fill: var(--paper); stroke: none; font-size: 13px; font-weight: 800; }
+.lab-magnetism-loop { fill: none; stroke: var(--ink); stroke-width: 2.6; stroke-linecap: round; }
+.lab-magnetism-angle { fill: none; stroke: var(--ink); stroke-width: 1.3; }
+.lab-magnetism-plot-axis { fill: none; stroke: var(--muted); stroke-width: 1; }
+.lab-magnetism-plot { fill: none; stroke-width: 2.4; }
+.lab-magnetism-plot.flux { stroke: var(--vec-b); }
+.lab-magnetism-plot.emf { stroke: var(--blue); }
+.lab-magnetism-marker { stroke: var(--paper); stroke-width: 1.5; }
+.lab-magnetism-marker.flux { fill: var(--vec-b); }
+.lab-magnetism-marker.emf { fill: var(--blue); }
+
+/* ---------- Campos numéricos e notas ---------- */
+.lab-magnetism-fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px 12px; margin: 18px 0 4px; }
+:where(.lab-magnetism-fields .sim-number) { display: flex; flex-direction: column; gap: 4px; min-width: 0; color: var(--muted); font-size: 11px; }
+:where(.lab-magnetism-fields .sim-number > div) { display: flex; align-items: center; gap: 6px; padding: 5px 7px; border: 1px solid var(--line); background: var(--surface); }
+:where(.lab-magnetism-fields .sim-number input) { width: 100%; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--ink); font-size: 12px; }
+:where(.lab-magnetism-fields .sim-number em) { font-style: normal; font-size: 10px; white-space: nowrap; }
+:where(.lab-magnetism-fields .sim-number small) { font-size: 9px; }
+.lab-magnetism-inverse { margin: 14px 0 0; padding: 10px 12px; border-left: 2px solid var(--blue); background: color-mix(in srgb, var(--blue) 8%, transparent); color: var(--muted); font-size: 11px; line-height: 1.5; }
+.lab-magnetism-inverse strong { color: var(--ink); }
+
+@media (max-width: 680px) {
+  .lab-magnetism-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
