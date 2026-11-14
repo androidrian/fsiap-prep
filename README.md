@@ -30,6 +30,12 @@ pnpm typecheck
 pnpm build
 ```
 
+## Publicação
+
+Cada alteração do `main` corre `.github/workflows/pages.yml`: typecheck, lint, testes, build e publicação no GitHub Pages. A versão publicada é estática (`VITE_LOCAL_ONLY=true`): não tem contas, só o modo local, e o progresso fica no browser de quem estuda.
+
+O site com contas (API + PostgreSQL) é publicado à parte no servidor, com os ficheiros de `deploy/`.
+
 ## Conteúdo e como o manter
 
 | O quê | Onde |

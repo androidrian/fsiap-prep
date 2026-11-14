@@ -13,6 +13,13 @@ export class ApiError extends Error {
 }
 
 const apiRoot = `${import.meta.env.BASE_URL}api`
+
+/**
+ * Publicação estática (ex.: GitHub Pages), sem API de contas: só existe o modo local.
+ * Ativa-se no build com VITE_LOCAL_ONLY=true.
+ */
+export const localOnly = import.meta.env.VITE_LOCAL_ONLY === 'true'
+
 const LOCAL_USER_KEY = 'fsiap.local.user'
 const LOCAL_PROGRESS_KEY = 'fsiap.local.progress'
 
@@ -63,6 +70,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 export async function getSession() {
   const local = localSession()
   if (local) return local
+  if (localOnly) return null
   try {
     return (await request<{ user: AuthUser }>('/session')).user
   } catch (error) {

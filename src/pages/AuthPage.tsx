@@ -1,7 +1,7 @@
 import { ArrowRight, Atom, Eye, EyeOff, HardDrive, ShieldCheck, WifiOff } from 'lucide-react'
 import { useState, type FormEvent } from 'react'
 import { useAuth } from '../auth/AuthContext'
-import { ApiError } from '../auth/api'
+import { ApiError, localOnly } from '../auth/api'
 
 export function AuthPage() {
   const { login, register, continueLocally, serverAvailable } = useAuth()
@@ -37,15 +37,16 @@ export function AuthPage() {
         <div className="auth-brand"><Atom size={27} /><span>FSIAP</span><small>PREP</small></div>
         <p className="eyebrow">Fichas resolvidas · laboratório · teoria</p>
         <h1>{mode === 'login' ? 'Continua exatamente onde paraste.' : 'Um plano que começa contigo.'}</h1>
-        <p className="auth-lede">Entra com a tua conta para sincronizar o progresso, ou estuda já neste computador sem conta.</p>
+        <p className="auth-lede">{localOnly ? 'Esta versão não tem contas: o teu progresso fica guardado neste browser.' : 'Entra com a tua conta para sincronizar o progresso, ou estuda já neste computador sem conta.'}</p>
 
-        {!serverAvailable && <p className="auth-offline" role="status"><WifiOff size={16} /> O servidor de contas não está a responder. O modo local funciona na mesma.</p>}
+        {!serverAvailable && !localOnly && <p className="auth-offline" role="status"><WifiOff size={16} /> O servidor de contas não está a responder. O modo local funciona na mesma.</p>}
 
         <button type="button" className="button button-dark auth-local" onClick={() => continueLocally()}>
           <HardDrive size={17} /> Estudar neste computador <ArrowRight size={17} />
         </button>
         <p className="auth-local-note">Sem conta nem password. O progresso fica guardado neste browser.</p>
 
+        {!localOnly && <>
         <div className="auth-divider"><span>ou com conta</span></div>
 
         <form className="auth-form" onSubmit={submit}>
@@ -66,6 +67,7 @@ export function AuthPage() {
 
         <button className="auth-switch" type="button" onClick={switchMode}>{mode === 'login' ? 'Ainda não tens conta? Criar conta' : 'Já tens conta? Entrar'}</button>
         <div className="auth-security"><ShieldCheck size={16} /><span>{mode === 'register' ? 'Sem email: guarda a password, porque não existe recuperação automática.' : 'Com conta, a sessão e o progresso ficam protegidos no servidor.'}</span></div>
+        </>}
       </section>
     </main>
   )

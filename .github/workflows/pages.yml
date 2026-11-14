@@ -1,0 +1,70 @@
+name: Deploy to GitHub Pages
+
+# Publica a versão estática do site (só modo local, sem API de contas) em
+# https://<utilizador>.github.io/fsiap-prep/ a cada alteração do main.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Test
+        run: pnpm test
+
+      - name: Build static site
+        run: pnpm build
+        env:
+          VITE_BASE_PATH: /fsiap-prep/
+          VITE_LOCAL_ONLY: 'true'
+
+      # O GitHub Pages não conhece as rotas da aplicação: com a cópia como 404.html,
+      # um link direto (ex.: /fsiap-prep/exercises/f1-05) abre a aplicação na mesma.
+      - name: Add SPA fallback
+        run: cp dist/index.html dist/404.html
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
