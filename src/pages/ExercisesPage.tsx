@@ -3,16 +3,16 @@ import { useMemo } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { families, familyById } from '../data/analysis'
 import { allExercises } from '../data/library'
-import { difficultyLabels, sheetTitles, statusLabels, type StudyExercise } from '../domain/study'
+import { difficultyLabels, sheetLabel, sheetNumbers, sheetTitles, statusLabels, type StudyExercise } from '../domain/study'
 import type { FamilyId, StudyStatus } from '../domain/types'
 import { hasLabScenario } from '../labs/registry'
 import { useProgress } from '../storage/ProgressContext'
 
-type CollectionId = 'all' | 'f1' | 'f2' | 'f3' | 'f4' | 'f5' | 'exams'
+type CollectionId = 'all' | 'f1' | 'f2' | 'f3' | 'f4' | 'f5' | 'f6' | 'exams'
 
 const collections: Array<{ id: CollectionId; label: string; title: string }> = [
   { id: 'all', label: 'Tudo', title: 'Todas as fichas e exames' },
-  ...([1, 2, 3, 4, 5] as const).map((sheet) => ({ id: `f${sheet}` as CollectionId, label: `Ficha ${sheet}`, title: sheetTitles[sheet] })),
+  ...sheetNumbers.map((sheet) => ({ id: `f${sheet}` as CollectionId, label: sheetLabel(sheet), title: sheetTitles[sheet] })),
   { id: 'exams', label: 'Exames', title: 'Problemas de exame resolvidos' },
 ]
 
@@ -23,7 +23,7 @@ function inCollection(exercise: StudyExercise, collection: CollectionId) {
 }
 
 function groupKey(exercise: StudyExercise) {
-  return exercise.source.kind === 'sheet' ? `Ficha ${exercise.source.sheet} — ${sheetTitles[exercise.source.sheet]}` : exercise.source.exam
+  return exercise.source.kind === 'sheet' ? `${sheetLabel(exercise.source.sheet)} — ${sheetTitles[exercise.source.sheet]}` : exercise.source.exam
 }
 
 const statusIcon = { done: Check, review: RotateCcw, doubt: CircleHelp } as const

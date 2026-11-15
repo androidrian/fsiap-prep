@@ -10,7 +10,7 @@ import type { StudyExercise } from '../domain/study'
 import { labCatalog } from '../labs/catalog'
 
 const familyIds = new Set(families.map((family) => family.id))
-const expectedPerSheet: Record<number, number> = { 1: 19, 2: 24, 3: 16, 4: 18, 5: 22 }
+const expectedPerSheet: Record<number, number> = { 1: 19, 2: 24, 3: 16, 4: 18, 5: 22, 6: 40 }
 
 /** Devolve as expressões matemáticas em linha ($…$) de um texto; falha se os cifrões não fecham. */
 function inlineMath(text: string): string[] {
@@ -56,7 +56,7 @@ describe('exercise library', () => {
     expect(new Set(allExercises.map((exercise) => exercise.id)).size).toBe(allExercises.length)
   })
 
-  it.each([1, 2, 3, 4, 5])('contains every exercise of sheet %i in order', (sheet) => {
+  it.each([1, 2, 3, 4, 5, 6])('contains every exercise of sheet %i in order', (sheet) => {
     const numbers = sheetExercises.filter((exercise) => exercise.source.kind === 'sheet' && exercise.source.sheet === sheet).map((exercise) => exercise.source.number)
     expect(numbers).toEqual(Array.from({ length: expectedPerSheet[sheet] }, (_, index) => index + 1))
   })

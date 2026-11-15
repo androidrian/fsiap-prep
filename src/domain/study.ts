@@ -69,12 +69,17 @@ export interface ExerciseTable {
   rows: string[][]
 }
 
+/** 1–5 são as fichas TP; 6 é a folha de preparação para o teste intercalar (matéria das fichas 1 a 4). */
+export type SheetNumber = 1 | 2 | 3 | 4 | 5 | 6
+
+export const sheetNumbers: readonly SheetNumber[] = [1, 2, 3, 4, 5, 6]
+
 export type ExerciseSource =
-  | { kind: 'sheet'; sheet: 1 | 2 | 3 | 4 | 5; number: number }
+  | { kind: 'sheet'; sheet: SheetNumber; number: number }
   | { kind: 'exam'; exam: string; number: number; path: string }
 
 export interface StudyExercise {
-  /** 'f1-05' para fichas (ficha 1, exercício 5); ids existentes para exames. */
+  /** 'f1-05' para fichas (ficha 1, exercício 5; 'f6-…' é a folha de preparação); ids existentes para exames. */
   id: string
   source: ExerciseSource
   /** Título curto e reconhecível, ex.: "Três cargas num triângulo equilátero". */
@@ -102,12 +107,18 @@ export interface StudyExercise {
   labs?: LabLink[]
 }
 
-export const sheetTitles: Record<1 | 2 | 3 | 4 | 5, string> = {
+export const sheetTitles: Record<SheetNumber, string> = {
   1: 'Cargas, forças, campos e potencial elétrico',
   2: 'Circuitos elétricos em corrente contínua',
   3: 'Força eletromagnética e indução',
   4: 'Radiação, ótica e fibra ótica',
   5: 'Térmica e transferência de calor',
+  6: 'Preparação para o teste: matéria das fichas 1 a 4',
+}
+
+/** Nome curto da coleção: "Ficha 3" para as fichas TP, "Preparação" para a folha de preparação. */
+export function sheetLabel(sheet: SheetNumber): string {
+  return sheet === 6 ? 'Preparação' : `Ficha ${sheet}`
 }
 
 export const statusLabels: Record<StudyStatus, string> = { todo: 'Por fazer', done: 'Feito', review: 'A rever', doubt: 'Dúvida' }
@@ -115,6 +126,6 @@ export const difficultyLabels: Record<1 | 2 | 3, string> = { 1: 'Aplicação dir
 
 export function exerciseLabel(exercise: StudyExercise): string {
   return exercise.source.kind === 'sheet'
-    ? `Ficha ${exercise.source.sheet} · Ex. ${exercise.source.number}`
+    ? `${sheetLabel(exercise.source.sheet)} · Ex. ${exercise.source.number}`
     : `${exercise.source.exam} · P.${exercise.source.number}`
 }

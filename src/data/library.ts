@@ -6,8 +6,9 @@ import { folha2 } from './sheets/folha2'
 import { folha3 } from './sheets/folha3'
 import { folha4 } from './sheets/folha4'
 import { folha5 } from './sheets/folha5'
+import { folha6 } from './sheets/folha6'
 
-export const sheetExercises: StudyExercise[] = [...folha1, ...folha2, ...folha3, ...folha4, ...folha5]
+export const sheetExercises: StudyExercise[] = [...folha1, ...folha2, ...folha3, ...folha4, ...folha5, ...folha6]
 export const allExercises: StudyExercise[] = [...sheetExercises, ...examStudyExercises]
 
 export const exerciseById: Record<string, StudyExercise> = Object.fromEntries(allExercises.map((exercise) => [exercise.id, exercise]))
