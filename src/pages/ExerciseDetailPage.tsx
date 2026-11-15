@@ -6,7 +6,7 @@ import { openTools } from '../components/toolsBus'
 import { familyById } from '../data/analysis'
 import { formulaById } from '../data/formulas'
 import { exerciseById, neighbours } from '../data/library'
-import { difficultyLabels, exerciseLabel, sheetTitles, statusLabels, type ExercisePart, type StudyExercise } from '../domain/study'
+import { difficultyLabels, exerciseLabel, sheetLabel, sheetTitles, statusLabels, type ExercisePart, type StudyExercise } from '../domain/study'
 import { checkAnswer, verdictMessage, type CheckResult } from '../domain/study/answer'
 import type { StudyStatus } from '../domain/types'
 import { hasLabScenario, labHref } from '../labs/registry'
@@ -25,7 +25,7 @@ export function ExerciseDetailPage() {
 
 function collectionLink(exercise: StudyExercise) {
   return exercise.source.kind === 'sheet'
-    ? { to: `/exercises?c=f${exercise.source.sheet}`, label: `Ficha ${exercise.source.sheet}`, title: sheetTitles[exercise.source.sheet] }
+    ? { to: `/exercises?c=f${exercise.source.sheet}`, label: sheetLabel(exercise.source.sheet), title: sheetTitles[exercise.source.sheet] }
     : { to: '/exercises?c=exams', label: 'Exames', title: exercise.source.exam }
 }
 

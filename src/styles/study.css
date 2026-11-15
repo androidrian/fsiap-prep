@@ -172,7 +172,7 @@ a.chip:hover { border-color: var(--blue); color: var(--blue); }
 
 /* ───────── Biblioteca de exercícios ───────── */
 .verified-count strong small { color: var(--muted); font-size: 18px; }
-.collection-tabs { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; margin-bottom: 20px; }
+.collection-tabs { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 8px; margin-bottom: 20px; }
 .collection-tabs button { display: grid; gap: 3px; padding: 12px 14px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); text-align: left; cursor: pointer; transition: border-color .15s ease, box-shadow .15s ease; }
 .collection-tabs button:hover { border-color: var(--ink); }
 .collection-tabs button.active { border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
@@ -316,7 +316,7 @@ a.chip:hover { border-color: var(--blue); color: var(--blue); }
 
 /* ───────── Visão geral: fichas ───────── */
 .sheet-progress { margin: 0 0 34px; padding: 24px 26px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
-.sheet-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; }
+.sheet-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 10px; }
 .sheet-tile { display: grid; gap: 3px; min-width: 0; padding: 13px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); transition: border-color .15s ease, transform .15s ease; }
 .sheet-tile:hover { border-color: var(--ink); transform: translateY(-2px); }
 .sheet-tile strong { font-size: 15px; }
@@ -369,7 +369,7 @@ a.chip:hover { border-color: var(--blue); color: var(--blue); }
   .exercise-layout { grid-template-columns: minmax(0, 1fr); }
   .exercise-aside { position: static; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); padding-top: 22px; border-top: 1px solid var(--line); }
   .collection-tabs { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .sheet-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .sheet-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .library-filters { grid-template-columns: 1fr 1fr 1fr; }
   .library-filters .filter-search { grid-column: 1 / -1; }
 }

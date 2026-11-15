@@ -1,11 +1,11 @@
 import { ArrowRight, FileCheck2 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { allExercises, exerciseById } from '../data/library'
-import { exerciseLabel, sheetTitles, type StudyExercise } from '../domain/study'
+import { exerciseLabel, sheetLabel, sheetNumbers, sheetTitles, type StudyExercise } from '../domain/study'
 import { useProgress } from '../storage/ProgressContext'
 
 const collections: Array<{ id: string; label: string; title: string; match: (exercise: StudyExercise) => boolean }> = [
-  ...([1, 2, 3, 4, 5] as const).map((sheet) => ({ id: `f${sheet}`, label: `Ficha ${sheet}`, title: sheetTitles[sheet], match: (exercise: StudyExercise) => exercise.source.kind === 'sheet' && exercise.source.sheet === sheet })),
+  ...sheetNumbers.map((sheet) => ({ id: `f${sheet}`, label: sheetLabel(sheet), title: sheetTitles[sheet], match: (exercise: StudyExercise) => exercise.source.kind === 'sheet' && exercise.source.sheet === sheet })),
   { id: 'exams', label: 'Exames', title: 'Problemas de exame resolvidos', match: (exercise: StudyExercise) => exercise.source.kind === 'exam' },
 ]
 
